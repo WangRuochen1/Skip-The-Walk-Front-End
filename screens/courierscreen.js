@@ -1,23 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, View,Button } from 'react-native';
-//import g_ls_length from'./global';
+import { StyleSheet, Text, View,Button, Alert } from 'react-native';
+import '../global';
+
 
 export default class CourierScreen extends React.Component {
 
-  constructor(props){
-    super(props);
-    this.id_ls = 0;
-    this.lng_ls = 5.0;
-    this.lat_ls = 6.0;
-    this.content_ls = 'abc'; 
-    this.user_id_ls = '123';
-    this.courier_id_ls = '456';  
-    this.apptoken = 'abc';
-   // this.state = {
-     this.ls_length = 0;
-   // 
-    
-}
+//   constructor(props){
+//     super(props);
+//     this.id_ls = 1.0;
+//     this.lng_ls = 5.0;
+//     this.lat_ls = 6.0;
+//     this.content_ls = ''; 
+//     this.user_id_ls = '123';
+//     this.courier_id_ls = '456';  
+//     this.apptoken = 'abc';
+//    // this.state = {
+//      this.ls_length = 0;
+//    //   
+// }
+
 
 //get order information
     list_order = (order_num) => {
@@ -28,14 +29,15 @@ export default class CourierScreen extends React.Component {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
+                credentials: 'include',
               }).then((res) => {
                   res.json().then(result =>{
-                    this.id_ls = result.data.list[order_num].id;
-                    this.content_ls = result.data.list[order_num].content;
-                    this.lat_ls = result.data.list[order_num].lat;
-                    this.lng_ls = result.data.list[order_num].lng;
-                    this.user_id_ls = result.data.list[order_num].userid;
-                    this.courier_id_ls = result.data.list[order_num].courierid;  
+                    global.id_ls = result.data.list[order_num].id;//global
+                    global.content_ls = result.data.list[order_num].content;
+                    global.lat_ls = result.data.list[order_num].lat;
+                    global.lng_ls = result.data.list[order_num].lng;
+                    global.user_id_ls = result.data.list[order_num].userid;
+                    global.courier_id_ls = result.data.list[order_num].courierid;  
                     this.forceUpdate(); 
                   })
               } 
@@ -55,20 +57,22 @@ export default class CourierScreen extends React.Component {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
+                credentials: 'include',
               }).then((res) => {
                 res.json().then(result=>{
                   console.log("result is :", result.data.list[0])
                   console.log("length is:", result.data.list.length)
-                  this.ls_length = result.data.list.length;  
+                  global.ls_length = result.data.list.length;//global
+                  this.forceUpdate();
                 })
-                this.forceUpdate();
+                
               } 
               ).catch(error => console.log(error))
       }
 
       renderButtons = () => {
         const buttons = [];
-        for( let i = 0; i < this.ls_length; i++) {
+        for( let i = 0; i < global.ls_length; i++) { //global
            buttons.push(
            <Button
            onPress={()=>{this.list_order(i)}}
@@ -88,40 +92,76 @@ export default class CourierScreen extends React.Component {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
-                 orderid: this.id_ls,
+                 orderid: global.id_ls, //global
                  }),
               })
+              this.props.navigation.navigate('CourierMap');   
       }
     
-      get_user_token = (id) => {
-        fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token', {
+      get_user_token = () => {
+       return fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
+                credentials: 'include',
+                body: JSON.stringify({
+                  userid: global.user_id_ls,
+                  }),
               }).then((res) => {
-                  this.apptoken = res.json()[id].apptoken;//这里看看这个id可能会有错
-                  this.forceUpdate();
+                  res.json().then(result =>{
+                    global.apptoken = result.data.apptoken;//这里看看这个id可能会有错global
+                    console.log("apptoken:",apptoken);
+                    console.log("userid", global.user_id_ls);
+                    this.forceUpdate();
+                  })
+                   
               } 
               ).catch(error => console.log(error))
       }
       
        //finish order
-      finish_order (){//这个地方看看会不会有permission的问题
-        this.get_user_token(this.id_ls);
-        fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push/token', {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                 token : this.apptoken, 
-                 message: "finished"
-                 }),
-              })
+      finish_order = () => {//这个地方看看会不会有permission的问题
+        this.get_user_token().then( //global
+          fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/finish', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              orderid: global.id_ls,
+             }),
+          }).then( (res)=>{
+            fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+             token : global.apptoken, 
+             message: "finished"
+             }),
+          }).then( (res)=>{
+            global.id_ls = -1;
+            global.content_ls = '';
+            global.lat_ls = -1;
+            global.lng_ls = -1;
+            global.user_id_ls = -1;
+            global.courier_id_ls = -1;
+            global.apptoken = '';
+          })
+        })
+
+        )
+        
+ 
       }
 
 
@@ -130,37 +170,53 @@ export default class CourierScreen extends React.Component {
     render() {   
       return (
         <View style = {styles.container}>
-        <Text>courier</Text>    
-        <Button
+           
+        
+           <View style = {styles.btn}>
+           <Button 
                 onPress={() => { this.props.navigation.navigate('DashboardScreen') }}
                 title='back'>
+           </Button> 
+            </View> 
+
+          <View style = {styles.btn}>
+           <Button 
+                onPress={() => { this.props.navigation.navigate('CourierMap') }}
+                title='Go to Map'>
            </Button>  
-            
-        <Button
+           </View>
+
+        <View style = {styles.btn}>
+        <Button 
                 onPress={this.order_list_length.bind(this)}
                 title='Get All Order'>
            </Button> 
+         </View>
 
-           <Button
+         <View style = {styles.btn}>
+           <Button 
                 onPress={this.accept_order.bind(this)}
                 title='Accept Order'>
            </Button> 
-           <Button
+        </View>
+           
+        <View style = {styles.btn}>
+           <Button 
                 onPress={this.finish_order.bind(this)}
                 title='Finish Order'>
            </Button> 
-          
-          
-           <Text>Order Content: {this.content_ls}</Text>
+        </View>
             {
-                 this.ls_length != 0?(
+                 global.ls_length != 0?( // global
                      <View>{this.renderButtons()}</View>
                      ):(
-                       <View><Text>no order</Text></View>
+                       <View><Text style={styles.text}>no order</Text></View>
                     )
                   }
-            <Text>Total order number : {this.ls_length}</Text>
-           <Text>Order ID :{this.id_ls}</Text>
+                    <Text style={styles.text}>Order Content: {global.content_ls}</Text>
+            
+            <Text style={styles.text}>Total order number : {global.ls_length}</Text>
+            <Text style={styles.text}>Order ID :{global.id_ls}</Text>
       </View>
 
       );
@@ -172,18 +228,28 @@ export default class CourierScreen extends React.Component {
     container: {
       flex: 1,
       backgroundColor: '#fff',
-      justifyContent: 'center',
-      padding: 10
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      margin:40,
+      padding: 10,
+      flexDirection: 'column'
     },
-    btn:{  
-        width:60,  
-        height:30,  
+    btn:{   
         borderWidth:1,  
-        borderRadius:3,  
+        borderRadius:3, 
+        margin: 10,
+        padding: 10, 
         borderColor:"black",  
         backgroundColor:"yellow",  
-        justifyContent:"center",  
-        alignItems:"center"  
-
+        borderStyle: 'dotted'
+    },
+    text:{
+      padding:20,
+      borderWidth:1,  
+      borderRadius:3, 
+      backgroundColor: '#E0FFFF',
+      borderStyle: 'dotted',
+      fontSize: 20,
+      fontWeight: 'bold'
     },
   });

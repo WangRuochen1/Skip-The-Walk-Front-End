@@ -1,6 +1,8 @@
-//this is for list
-global.id_ls = id_ls;
-global.lng_ls = lng_ls;
-global.lat_ls = lat_ls;
-global.content_ls = content_ls;
-global.g_ls_length = g_ls_length;
+
+global.id_ls = -1;
+global.content_ls = '';
+global.lat_ls = -1;
+global.lng_ls = -1;
+global.user_id_ls = -1;
+global.courier_id_ls = -1;
+global.apptoken = '';

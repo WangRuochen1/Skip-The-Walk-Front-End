@@ -85,6 +85,7 @@ export default class LoginScreen extends React.Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({
               username: username,
               fbtoken: fbtoken,

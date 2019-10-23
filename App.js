@@ -6,6 +6,7 @@ import LoginScreen from './screens/login_screen';
 import DashboardScreen from './screens/dashboard';
 import CustomerScreen from './screens/customerscreen';
 import CourierScreen from './screens/courierscreen';
+import CourierMap from './screens/couriermap';
 
 
 
@@ -19,7 +20,8 @@ const AppSwitchNavigator = createSwitchNavigator({
   LoginScreen: LoginScreen,
   DashboardScreen: DashboardScreen,
   CourierScreen:CourierScreen,
-  CustomerScreen: CustomerScreen
+  CustomerScreen: CustomerScreen,
+  CourierMap: CourierMap
 });
 
 const AppNavigator = createAppContainer(AppSwitchNavigator);
