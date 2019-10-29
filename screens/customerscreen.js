@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View,Button,TextInput,Alert } from 'react-native';
-import MapView, {AnimatedRegion, Marker, ProviderPropType} from 'react-native-maps';
+import { StyleSheet, Text, View,Button,TextInput,Alert } from "react-native";
+import MapView, {AnimatedRegion, Marker, ProviderPropType} from "react-native-maps";
 import SocketIOClient from 'socket.io-client';
 import runicon from '/Users/wangxiaogou/goodProject/assets/run.png';
 
@@ -14,14 +14,14 @@ export default class CustomerScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    user_text: '',
+    user_text: "",
     region: {
       latitude: 49.267941,
       longitude: -123.247360,
       latitudeDelta: 0.00922,
       longitudeDelta: 0.0200
     },
-    text: '',
+    text: "",
     coordinate: new AnimatedRegion({
       latitude: LATITUDE,
       longitude: LONGITUDE,
@@ -29,9 +29,9 @@ export default class CustomerScreen extends React.Component {
       longitudeDelta: 0
     }),   
     }
-    this.socket = SocketIOClient('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000');
+    this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
     // this.socket.emit('locationIn', JSON.stringify({lat: 12.35, lng: 23.45})); // emits 'hi server' to your server
-    this.socket.on('locationOut', (data) => {
+    this.socket.on("locationOut", (data) => {
       console.log(JSON.parse(data.location))
       let location = {
         latitude:JSON.parse(data.location).lat, 
@@ -85,13 +85,13 @@ export default class CustomerScreen extends React.Component {
   }
  
   place_order = (lat,lng) => {
-    fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/place', {
+    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/place", {
             method: 'POST',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
              content:this.state.user_text,
              lat:lat,
@@ -130,7 +130,7 @@ export default class CustomerScreen extends React.Component {
              <Text style = {{fontSize:20,fontWeight:'bold'}}>Enter Order Information</Text>
            <TextInput 
                       placeholder="Order Information"
-                      underlineColorAndroid={'transparent'}//去掉下划线
+                      underlineColorAndroid={"transparent"}//去掉下划线
                             //将文本写入state
                      onChangeText={(user_text) => this.setState({user_text})}/>
             </View>
@@ -154,8 +154,8 @@ export default class CustomerScreen extends React.Component {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
+      backgroundColor: "#fff",
+      justifyContent: "center",
       padding: 0,
     },
     btn:{   
@@ -165,7 +165,7 @@ export default class CustomerScreen extends React.Component {
       padding: 10, 
       borderColor:"black",  
       backgroundColor:"yellow",  
-      borderStyle: 'dotted'
+      borderStyle: "dotted"
   },
   });
 

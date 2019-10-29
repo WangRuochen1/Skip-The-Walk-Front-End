@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { StyleSheet, Text, View,Button,TextInput,Alert } from 'react-native';
 import MapView, {AnimatedRegion, Marker, ProviderPropType} from 'react-native-maps';
-import SocketIOClient from 'socket.io-client';
-import runicon from '/Users/wangxiaogou/goodProject/assets/run.png';
+import SocketIOClient from "socket.io-client";
+import runicon from "/Users/wangxiaogou/goodProject/assets/run.png";
 
 
 const LATITUDE = 49.267941;
@@ -14,15 +14,15 @@ export default class CourierMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    apptoken:'',
-    user_text: '',
+    apptoken:"",
+    user_text: "",
     region: {
       latitude: 49.267941,
       longitude: -123.247360,
       latitudeDelta: 0.00922,
       longitudeDelta: 0.00200
     },
-    text: '',
+    text: "",
     coordinate: new AnimatedRegion({
       latitude: LATITUDE,
       longitude: LONGITUDE,
@@ -30,9 +30,9 @@ export default class CourierMap extends React.Component {
       longitudeDelta: 0
     }),   
     }
-    this.socket = SocketIOClient('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000');
-    this.socket.emit('locationIn', JSON.stringify({lat: 12.35, lng: 23.45})); // emits 'hi server' to your server
-    this.socket.on('locationOut', (data) => {
+    this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
+    this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits 'hi server' to your server
+    this.socket.on("locationOut", (data) => {
       console.log(JSON.parse(data.location))
       let location = {
         latitude:JSON.parse(data.location).lat, 
@@ -87,7 +87,7 @@ export default class CourierMap extends React.Component {
 
   getUserlocHandler = () => {
     navigator.geolocation.getCurrentPosition(position=> {
-      this.socket.emit('locationIn', JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
+      this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
     }, err => console.log(err))
   }
 
@@ -147,7 +147,7 @@ export default class CourierMap extends React.Component {
         </MapView>
         <Button style={{position: "absolute", bottom: 10}}
                 onPress={() => { this.props.navigation.navigate('CourierScreen') }}
-                title='back to courier screen'>
+                title="back to courier screen">
            </Button>  
 
         {/* <View style = {styles.btn}>
@@ -170,8 +170,8 @@ export default class CourierMap extends React.Component {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
+      backgroundColor: "#fff",
+      justifyContent: "center",
       padding: 0,
       margin: 0
     },
@@ -182,7 +182,7 @@ export default class CourierMap extends React.Component {
         padding: 10, 
         borderColor:"black",  
         backgroundColor:"yellow",  
-        borderStyle: 'dotted'
+        borderStyle: "dotted"
     },
   });
 

@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View,Button, Alert } from 'react-native';
-import '../global';
+import React from "react";
+import { StyleSheet, Text, View,Button, Alert } from "react-native";
+import "../global";
 
 
 export default class CourierScreen extends React.Component {
@@ -23,13 +23,13 @@ export default class CourierScreen extends React.Component {
 //get order information
     list_order = (order_num) => {
       console.log("here");
-        fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list', {
-                method: 'GET',
+        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
+                method: "GET",
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                credentials: 'include',
+                credentials: "include",
               }).then((res) => {
                   res.json().then(result =>{
                     global.id_ls = result.data.list[order_num].id;//global
@@ -51,13 +51,13 @@ export default class CourierScreen extends React.Component {
       order_list_length = () => {
         // this.ls_length = 5;//这个是假数据，等下要去掉
         // this.forceUpdate();
-        fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list', {
-                method: 'GET',
+        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
+                method: "GET",
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                credentials: 'include',
+                credentials: "include",
               }).then((res) => {
                 res.json().then(result=>{
                   console.log("result is :", result.data.list[0])
@@ -86,28 +86,28 @@ export default class CourierScreen extends React.Component {
    
       //accept order
       accept_order = () => {
-        fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/accept', {
+        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/accept", {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                credentials: 'include',
+                credentials: "include",
                 body: JSON.stringify({
                  orderid: global.id_ls, //global
                  }),
               })
-              this.props.navigation.navigate('CourierMap');   
+              this.props.navigation.navigate("CourierMap");   
       }
     
       get_user_token = () => {
-       return fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token', {
-                method: 'POST',
+       return fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token", {
+                method: "POST",
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                credentials: 'include',
+                credentials: "include",
                 body: JSON.stringify({
                   userid: global.user_id_ls,
                   }),
@@ -126,13 +126,13 @@ export default class CourierScreen extends React.Component {
        //finish order
       finish_order = () => {//这个地方看看会不会有permission的问题
         this.get_user_token().then( //global
-          fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/finish', {
+          fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/finish", {
             method: 'POST',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
               orderid: global.id_ls,
              }),
@@ -143,19 +143,19 @@ export default class CourierScreen extends React.Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
              token : global.apptoken, 
              message: "finished"
              }),
           }).then( (res)=>{
             global.id_ls = -1;
-            global.content_ls = '';
+            global.content_ls = " ";
             global.lat_ls = -1;
             global.lng_ls = -1;
             global.user_id_ls = -1;
             global.courier_id_ls = -1;
-            global.apptoken = '';
+            global.apptoken = " ";
           })
         })
 

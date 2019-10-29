@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View,Button } from 'react-native';
 import Expo from "expo";
 import * as Facebook from 'expo-facebook';
-import { Notifications } from 'expo';
+import { Notifications } from "expo";
 import * as Permissions from 'expo-permissions';
 
 
@@ -17,20 +17,20 @@ export default class LoginScreen extends React.Component {
       }
 
     check_login = () => {
-        fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/check', {
-                method: 'GET',
+        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/check", {
+                method: "GET",
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                credentials: 'include',
+                credentials: "include",
               }).then((response) => {
                 // console.log("response:",response.json());
                 response.json().then(result=> {
                   //console.log("result:",result);
                   if(result.errno == 0){
                     //switch to dashboard
-                    this.props.navigation.navigate('DashboardScreen');
+                    this.props.navigation.navigate("DashboardScreen");
                  }else{
                     alert(`Please Sign In With Facebook`);
                  }
@@ -50,17 +50,17 @@ export default class LoginScreen extends React.Component {
         Permissions.NOTIFICATIONS
       );
       let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
+      if (existingStatus !== "granted") {
         const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
         finalStatus = status;
       }
-      if (finalStatus !== 'granted') {
+      if (finalStatus !== "granted") {
         return;
       }
       let apptoken = await Notifications.getExpoPushTokenAsync();
 
     //call function to return value
-    if(type == 'success'){
+    if(type == "success"){
       const response = await fetch(
         `https://graph.facebook.com/me?access_token=${token}`);
 
@@ -82,7 +82,7 @@ export default class LoginScreen extends React.Component {
     fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login', {
             method: 'POST',
             headers: {
-              Accept: 'application/json',
+              Accept: "application/json",
               'Content-Type': 'application/json',
             },
             credentials: 'include',
@@ -97,7 +97,7 @@ export default class LoginScreen extends React.Component {
 
 
   Jump_Dash = ()=>{
-    this.props.navigation.navigate('DashboardScreen');
+    this.props.navigation.navigate("DashboardScreen");
   }
 
   render() {
@@ -126,8 +126,8 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center",
     padding: 10
   },
 });
