@@ -26,7 +26,7 @@ export default class LoginScreen extends React.Component {
                 credentials: "include",
               }).then((response) => {
                 // console.log("response:",response.json());
-                response.json().then(result=> {
+                response.json().then(result => {
                   //console.log("result:",result);
                   if(result.errno == 0){
                     //switch to dashboard
@@ -96,7 +96,7 @@ export default class LoginScreen extends React.Component {
 
 
 
-  Jump_Dash = ()=>{
+  Jump_Dash = () =>{
     this.props.navigation.navigate("DashboardScreen");
   }
 
