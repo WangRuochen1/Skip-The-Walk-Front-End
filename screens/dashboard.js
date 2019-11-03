@@ -1,11 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View,Button } from "react-native";
 
-//dashboard is for notification
+/*DashBoard screen if for test use, the recent update is in openpages and 
+login_screen, if you are doing code review, you can 
+ */
 export default class DashboardScreen extends React.Component {
   
   
-
+  
   
   render() {
     return (

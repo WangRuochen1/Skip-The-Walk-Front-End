@@ -30,7 +30,6 @@ export default class CustomerScreen extends React.Component {
     }),   
     };
     this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
-    // this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits "hi server" to your server
     this.socket.on("locationOut", (data) => {
       console.log(JSON.parse(data.location));
       let location = {
@@ -42,14 +41,8 @@ export default class CustomerScreen extends React.Component {
   }
 
 
-  // getUserlocHandler = () => {
-  //   navigator.geolocation.getCurrentPosition(position=> {
-  //     this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
-  //   }, err => console.log(err))
-  // }
 
   setPosition = (position) => {
-    // console.log(position.latitude)
     console.log(position.longitude);
     this.setState({
       region: {
@@ -69,8 +62,8 @@ export default class CustomerScreen extends React.Component {
   animate(location) {
     const { coordinate } = this.state;
     const newCoordinate = {
-      latitude: location.latitude,  //+ Math.random(),
-      longitude: location.longitude  //+ Math.random()
+      latitude: location.latitude,  
+      longitude: location.longitude  
     };
 
     coordinate.timing(newCoordinate).start();
@@ -78,7 +71,6 @@ export default class CustomerScreen extends React.Component {
 
 
   get_order_info = () => {
-     // let content = "order content";
       let lat = this.state.region.latitude;
       let lng = this.state.region.longitude;
       this.place_order(lat,lng);
@@ -130,8 +122,7 @@ export default class CustomerScreen extends React.Component {
              <Text style = {{fontSize:20,fontWeight:"bold"}}>Enter Order Information</Text>
            <TextInput 
                       placeholder="Order Information"
-                      underlineColorAndroid={"transparent"}//去掉下划线
-                            //将文本写入state
+                      underlineColorAndroid={"transparent"}
                      onChangeText={(user_text) => this.setState({user_text})}/>
             </View>
            <Button style={{position: "absolute", bottom: 40,margin:16}}

@@ -5,7 +5,12 @@ import "../global";
 
 export default class CourierScreen extends React.Component {
 
-//get order information
+    /* This function list_order is triggered by button of each order.
+    Every small order is a button, when pressed, it will give us the 
+    detailed information. This function help us to get all the information
+    from back end database
+    */
+     
     list_order = (order_num) => {
       console.log("here");
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
@@ -31,6 +36,10 @@ export default class CourierScreen extends React.Component {
              }
 
 
+      /* This function helps us to get total number of data. We need this function to 
+      decide how many small "order button" we need to create. This will triggered by press
+      button "get all order"
+       */
      
       order_list_length = () => {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
@@ -52,9 +61,13 @@ export default class CourierScreen extends React.Component {
               ).catch((error) => console.log(error));
       }
 
+      /*This function help us to create list of order button use for loop
+       Before this function, we need to first press "get all order", to get 
+       the total number of button we need to create
+       */
       renderButtons = () => {
         const buttons = [];
-        for( let i = 0; i < global.ls_length; i++) { //global
+        for( let i = 0; i < global.ls_length; i++) { 
            buttons.push(
            <Button
            onPress={() => {this.list_order(i);}}
@@ -66,7 +79,9 @@ export default class CourierScreen extends React.Component {
         return buttons;
       }
    
-      //accept order
+      /* When courier wants to accept certain order, he can press "accpet order" button.
+      Function will be called, and in backend, this order will be marked accepted 
+       */
       accept_order = () => {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/accept", {
                 method: "POST",
@@ -76,12 +91,15 @@ export default class CourierScreen extends React.Component {
                 },
                 credentials: "include",
                 body: JSON.stringify({
-                 orderid: global.id_ls, //global
+                 orderid: global.id_ls, 
                  }),
               });
               this.props.navigation.navigate("CourierMap");   
       }
     
+      /* This function gets the user's app token so 
+      that we can send notification later
+      */
       get_user_token = () => {
        return fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token", {
                 method: "POST",
@@ -95,7 +113,7 @@ export default class CourierScreen extends React.Component {
                   }),
               }).then((res) => {
                   res.json().then((result) => {
-                    global.apptoken = result.data.apptoken;//这里看看这个id可能会有错global
+                    global.apptoken = result.data.apptoken;
                     console.log("userid", global.user_id_ls);
                     this.forceUpdate();
                   });
@@ -104,9 +122,11 @@ export default class CourierScreen extends React.Component {
               ).catch((error) => console.log(error));
       }
       
-       //finish order
-      finish_order = () => {//这个地方看看会不会有permission的问题
-        this.get_user_token().then( //global
+      /* This function will mark the order to finished status. After this we will send
+      notification to customer indicate his order is finished. 
+      */
+      finish_order = () => {
+        this.get_user_token().then( 
           fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/finish", {
             method: "POST",
             headers: {

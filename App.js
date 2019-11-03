@@ -15,7 +15,8 @@ export default class App extends React.Component {
     return <AppNavigator />;
   }
 }
-
+/* Navigation between each map
+*/
 const AppSwitchNavigator = createSwitchNavigator({
   LoginScreen: LoginScreen,
   DashboardScreen: DashboardScreen,

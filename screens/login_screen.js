@@ -6,16 +6,13 @@ import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 
 
-
-
-//import { Container, Content, Header, Form, Input, Item, Label } from "native-base"
-
 export default class LoginScreen extends React.Component {
 
     componentDidMount() {
         this.check_login();
       }
-
+    /*check if user have loged in before, if true we skip the facebook login screen
+    */ 
     check_login = () => {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/check", {
                 method: "GET",
@@ -25,11 +22,8 @@ export default class LoginScreen extends React.Component {
                 },
                 credentials: "include",
               }).then((response) => {
-                // console.log("response:",response.json());
                 response.json().then((result) => {
-                  //console.log("result:",result);
                   if(result.errno == 0){
-                    //switch to dashboard
                     this.props.navigation.navigate("DashboardScreen");
                  }else{
                     alert(`Please Sign In With Facebook`);
@@ -39,7 +33,11 @@ export default class LoginScreen extends React.Component {
               } 
               ).catch((error) => console.log(error));
       }
-
+  
+  /**face book log in function, call face book API to log in 
+   * send backend with token and user name/ID
+   * 
+   */
   async loginWithFb(){
     try {
     //face book login    
@@ -65,11 +63,6 @@ export default class LoginScreen extends React.Component {
         `https://graph.facebook.com/me?access_token=${token}`);
 
        let id = (await response.json()).id;
-       //if(typeof id=== "string" );
-      //  console.log("type: ",typeof id);
-      //  console.log("face book token: ",token);
-      //  console.log("face book name: ",await id);
-      //  console.log("type:",type);
        this.user_signup(id,token,apptoken);
     }
   }catch ({ message }) {
@@ -78,6 +71,9 @@ export default class LoginScreen extends React.Component {
   
    }
 
+   /* Send back end username, facebook login token and app token
+   called in loginWithFB
+   */
   user_signup = (username, fbtoken,apptoken) => {
     fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
             method: "POST",
@@ -95,7 +91,8 @@ export default class LoginScreen extends React.Component {
   }
 
 
-
+  /* Jump to another screen
+   */
   Jump_Dash = () => {
     this.props.navigation.navigate("DashboardScreen");
   }
