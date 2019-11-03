@@ -12,14 +12,14 @@ import CourierMap from "./screens/couriermap";
 
 export default class App extends React.Component {
   render() {
-    return <AppNavigator/>;
+    return <AppNavigator />;
   }
 }
 
 const AppSwitchNavigator = createSwitchNavigator({
   LoginScreen: LoginScreen,
   DashboardScreen: DashboardScreen,
-  CourierScreen:CourierScreen,
+  CourierScreen: CourierScreen,
   CustomerScreen: CustomerScreen,
   CourierMap: CourierMap
 });

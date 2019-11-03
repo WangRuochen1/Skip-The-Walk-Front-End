@@ -68,7 +68,7 @@ export default class CourierScreen extends React.Component {
                 })
                 
               } 
-              ).catch(error => console.log(error))
+              ).catch((error) => console.log(error));
       }
 
       renderButtons = () => {
@@ -80,7 +80,7 @@ export default class CourierScreen extends React.Component {
            title = {`order ${i}`}
            key = {i}
            ></Button>
-          )
+          );
         }
         return buttons;
       }
@@ -97,7 +97,7 @@ export default class CourierScreen extends React.Component {
                 body: JSON.stringify({
                  orderid: global.id_ls, //global
                  }),
-              })
+              });
               this.props.navigation.navigate("CourierMap");   
       }
     
@@ -113,7 +113,7 @@ export default class CourierScreen extends React.Component {
                   userid: global.user_id_ls,
                   }),
               }).then((res) => {
-                  res.json().then(result =>{
+                  res.json().then((result) =>{
                     global.apptoken = result.data.apptoken;//这里看看这个id可能会有错global
                     console.log("apptoken:",apptoken);
                     console.log("userid", global.user_id_ls);
@@ -121,7 +121,7 @@ export default class CourierScreen extends React.Component {
                   });
                    
               } 
-              ).catch(error => console.log(error));
+              ).catch((error) => console.log(error));
       }
       
        //finish order

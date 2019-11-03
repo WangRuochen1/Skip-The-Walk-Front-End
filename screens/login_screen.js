@@ -26,7 +26,7 @@ export default class LoginScreen extends React.Component {
                 credentials: "include",
               }).then((response) => {
                 // console.log("response:",response.json());
-                response.json().then(result => {
+                response.json().then((result) => {
                   //console.log("result:",result);
                   if(result.errno == 0){
                     //switch to dashboard
@@ -37,7 +37,7 @@ export default class LoginScreen extends React.Component {
                 });
                 
               } 
-              ).catch(error => console.log(error));
+              ).catch((error) => console.log(error));
       }
 
   async loginWithFb(){
@@ -60,7 +60,7 @@ export default class LoginScreen extends React.Component {
       let apptoken = await Notifications.getExpoPushTokenAsync();
 
     //call function to return value
-    if(type == "success"){
+    if(type =="success"){
       const response = await fetch(
         `https://graph.facebook.com/me?access_token=${token}`);
 

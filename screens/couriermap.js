@@ -88,9 +88,9 @@ export default class CourierMap extends React.Component {
   }
 
   getUserlocHandler = () => {
-    navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.getCurrentPosition((position) => {
       this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls}));
-    }, err => console.log(err));
+    }, (err) => console.log(err));
   }
 
   setPosition = (position) => {
@@ -140,7 +140,7 @@ export default class CourierMap extends React.Component {
         onRegionChange={() =>this.onRegionChange}
         style ={{flex:1}} >
            <Marker.Animated
-            ref={marker => {
+            ref={(marker) => {
               this.marker = marker;
             }}
             coordinate={this.state.coordinate}
