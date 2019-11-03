@@ -56,19 +56,19 @@ export default class OpenPage extends Component {
     console.log("Pressed right");
   }
 
-  
+
 
   render() {
     return (
       <View style={{flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
-        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "powderblue", justifyContent:"center", alignItems: "center"}} onPress={()=> this.pressLeft()} >
+        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "powderblue", justifyContent:"center", alignItems: "center"}} onPress={() => this.pressLeft()} >
             
             <Image source={customer} style= {styles.pic2} />
             <Text style = {styles.text}> I want to order! </Text>
             <FadeInView style={styles.myButton2} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "skyblue", justifyContent:"center", alignItems: "center"}} onPress={()=> this.pressRight()} > 
+        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "skyblue", justifyContent:"center", alignItems: "center"}} onPress={() => this.pressRight()} > 
             
             <Image source={courier} style={styles.pic} />
             <Text style = {styles.text}> Let me be the courier! </Text>

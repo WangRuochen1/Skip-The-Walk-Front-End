@@ -76,7 +76,7 @@ export default class CourierScreen extends React.Component {
         for( let i = 0; i < global.ls_length; i++) { //global
            buttons.push(
            <Button
-           onPress={()=>{this.list_order(i);}}
+           onPress={() =>{this.list_order(i);}}
            title = {`order ${i}`}
            key = {i}
            ></Button>
@@ -149,7 +149,7 @@ export default class CourierScreen extends React.Component {
              token : global.apptoken, 
              message: "finished"
              }),
-          }).then( (res)=>{
+          }).then( (res) =>{
             global.id_ls = -1;
             global.content_ls = "";
             global.lat_ls = -1;

@@ -58,7 +58,7 @@ export default class CustomerScreen extends React.Component {
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00200
       }
-    })
+    });
   }
 
   onRegionChange(region) {
@@ -77,7 +77,7 @@ export default class CustomerScreen extends React.Component {
 }
 
 
-  get_order_info = ()=>{
+  get_order_info = () =>{
      // let content = "order content";
       let lat = this.state.region.latitude;
       let lng = this.state.region.longitude;
@@ -108,7 +108,7 @@ export default class CustomerScreen extends React.Component {
            <MapView 
         provider={this.props.provider}
         region={this.state.region} 
-        onRegionChange={()=>this.onRegionChange}
+        onRegionChange={() =>this.onRegionChange}
         style ={{flex:1}} >
            <Marker.Animated
             ref={marker => {
@@ -122,7 +122,7 @@ export default class CustomerScreen extends React.Component {
       
        
         <Button style={{position: "absolute", bottom: 10,}}
-                onPress={() => { this.props.navigation.navigate("DashboardScreen") }}
+                onPress={() => { this.props.navigation.navigate("DashboardScreen"); }}
                 title="back"
                 color="green">
            </Button>  

@@ -40,7 +40,7 @@ export default class CourierMap extends React.Component {
         latitude:JSON.parse(data.location).lat, 
         longitude: JSON.parse(data.location).lng};
       this.setPosition(location);
-      this.animate(location)
+      this.animate(location);
     });
   }
 
@@ -88,7 +88,7 @@ export default class CourierMap extends React.Component {
   }
 
   getUserlocHandler = () => {
-    navigator.geolocation.getCurrentPosition(position=> {
+    navigator.geolocation.getCurrentPosition(position => {
       this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls}));
     }, err => console.log(err));
   }
@@ -103,7 +103,7 @@ export default class CourierMap extends React.Component {
         latitudeDelta: 0.00922,
         longitudeDelta: 0.00200
       }
-    })
+    });
   }
 
   onRegionChange(region) {
@@ -137,7 +137,7 @@ export default class CourierMap extends React.Component {
            <MapView 
         provider={this.props.provider}
         region={this.state.region} 
-        onRegionChange={()=>this.onRegionChange}
+        onRegionChange={() =>this.onRegionChange}
         style ={{flex:1}} >
            <Marker.Animated
             ref={marker => {
