@@ -34,7 +34,7 @@ export default class LoginScreen extends React.Component {
                  }else{
                     alert(`Please Sign In With Facebook`);
                  }
-                })
+                });
                 
               } 
               ).catch(error => console.log(error));
