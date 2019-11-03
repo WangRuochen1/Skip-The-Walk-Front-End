@@ -76,7 +76,7 @@ export default class CourierScreen extends React.Component {
         for( let i = 0; i < global.ls_length; i++) { //global
            buttons.push(
            <Button
-           onPress={() =>{this.list_order(i);}}
+           onPress={() => {this.list_order(i);}}
            title = {`order ${i}`}
            key = {i}
            ></Button>
@@ -113,7 +113,7 @@ export default class CourierScreen extends React.Component {
                   userid: global.user_id_ls,
                   }),
               }).then((res) => {
-                  res.json().then((result) =>{
+                  res.json().then((result) => {
                     global.apptoken = result.data.apptoken;//这里看看这个id可能会有错global
                     console.log("apptoken:",apptoken);
                     console.log("userid", global.user_id_ls);
@@ -149,7 +149,7 @@ export default class CourierScreen extends React.Component {
              token : global.apptoken, 
              message: "finished"
              }),
-          }).then( (res) =>{
+          }).then( (res) => {
             global.id_ls = -1;
             global.content_ls = "";
             global.lat_ls = -1;

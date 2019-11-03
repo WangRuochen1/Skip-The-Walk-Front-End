@@ -137,7 +137,7 @@ export default class CourierMap extends React.Component {
            <MapView 
         provider={this.props.provider}
         region={this.state.region} 
-        onRegionChange={() =>this.onRegionChange}
+        onRegionChange={() => this.onRegionChange}
         style ={{flex:1}} >
            <Marker.Animated
             ref={(marker) => {

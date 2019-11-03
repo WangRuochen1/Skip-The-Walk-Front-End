@@ -96,7 +96,7 @@ export default class LoginScreen extends React.Component {
 
 
 
-  Jump_Dash = () =>{
+  Jump_Dash = () => {
     this.props.navigation.navigate("DashboardScreen");
   }
 

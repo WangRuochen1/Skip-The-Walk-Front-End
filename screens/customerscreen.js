@@ -77,7 +77,7 @@ export default class CustomerScreen extends React.Component {
 }
 
 
-  get_order_info = () =>{
+  get_order_info = () => {
      // let content = "order content";
       let lat = this.state.region.latitude;
       let lng = this.state.region.longitude;
@@ -108,10 +108,10 @@ export default class CustomerScreen extends React.Component {
            <MapView 
         provider={this.props.provider}
         region={this.state.region} 
-        onRegionChange={() =>this.onRegionChange}
+        onRegionChange={() => this.onRegionChange}
         style ={{flex:1}} >
            <Marker.Animated
-            ref={marker => {
+            ref={(marker) => {
               this.marker = marker;
             }}
             coordinate={this.state.coordinate}
