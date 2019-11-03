@@ -1,8 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View,Button,TextInput,Alert } from 'react-native';
-import MapView, {AnimatedRegion, Marker, ProviderPropType} from 'react-native-maps';
+import { StyleSheet, Text, View,Button,TextInput,Alert } from "react-native";
+import MapView, {AnimatedRegion, Marker, ProviderPropType} from "react-native-maps";
 import SocketIOClient from "socket.io-client";
 import runicon from "/Users/wangxiaogou/goodProject/assets/run.png";
+import "../global";
 
 
 const LATITUDE = 49.267941;
@@ -31,7 +32,8 @@ export default class CourierMap extends React.Component {
     }),   
     }
     this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
-    this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits 'hi server' to your server
+    this.socket.emit("join", JSON.stringify({orderid:global.id_ls})); // emits "hi server" to your server
+    // this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits "hi server" to your server
     this.socket.on("locationOut", (data) => {
       console.log(JSON.parse(data.location))
       let location = {
@@ -43,13 +45,13 @@ export default class CourierMap extends React.Component {
   }
 
 //   get_user_token = (id) => {
-//         fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token', {
-//                 method: 'POST',
+//         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token", {
+//                 method: "POST",
 //                 headers: {
-//                   Accept: 'application/json',
-//                   'Content-Type': 'application/json',
+//                   Accept: "application/json",
+//                   "Content-Type": "application/json",
 //                 },
-//                 credentials: 'include',
+//                 credentials: "include",
 //               }).then((res) => {
 //                   this.apptoken = res.json()[id].apptoken;//这里看看这个id可能会有错
 //                   this.forceUpdate();
@@ -60,13 +62,13 @@ export default class CourierMap extends React.Component {
 //        //finish order
 //       finish_order (){//这个地方看看会不会有permission的问题
 //         this.get_user_token(this.id_ls);
-//         fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push/token', {
-//                 method: 'POST',
+//         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push/token", {
+//                 method: "POST",
 //                 headers: {
-//                   Accept: 'application/json',
-//                   'Content-Type': 'application/json',
+//                   Accept: "application/json",
+//                   "Content-Type": "application/json",
 //                 },
-//                 credentials: 'include',
+//                 credentials: "include",
 //                 body: JSON.stringify({
 //                  token : this.apptoken, 
 //                  message: "finished"
@@ -87,7 +89,7 @@ export default class CourierMap extends React.Component {
 
   getUserlocHandler = () => {
     navigator.geolocation.getCurrentPosition(position=> {
-      this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
+      this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls}));
     }, err => console.log(err))
   }
 
@@ -146,14 +148,14 @@ export default class CourierMap extends React.Component {
           />
         </MapView>
         <Button style={{position: "absolute", bottom: 10}}
-                onPress={() => { this.props.navigation.navigate('CourierScreen') }}
+                onPress={() => { this.props.navigation.navigate("CourierScreen") }}
                 title="back to courier screen">
            </Button>  
 
         {/* <View style = {styles.btn}>
            <Button 
                 onPress={this.finish_order.bind(this)}
-                title='Finish Order'>
+                title="Finish Order">
            </Button> 
         </View> */}
       </View>
@@ -185,5 +187,3 @@ export default class CourierMap extends React.Component {
         borderStyle: "dotted"
     },
   });
-
-

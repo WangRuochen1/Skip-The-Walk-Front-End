@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View,Button } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View,Button } from "react-native";
 
 //dashboard is for notification
 export default class DashboardScreen extends React.Component {
@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#E0FFFF",
     borderStyle: "dotted",
     fontSize: 20,
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
 });

@@ -10,10 +10,10 @@ export default class CourierScreen extends React.Component {
 //     this.id_ls = 1.0;
 //     this.lng_ls = 5.0;
 //     this.lat_ls = 6.0;
-//     this.content_ls = ''; 
-//     this.user_id_ls = '123';
-//     this.courier_id_ls = '456';  
-//     this.apptoken = 'abc';
+//     this.content_ls = ""; 
+//     this.user_id_ls = "123";
+//     this.courier_id_ls = "456";  
+//     this.apptoken = "abc";
 //    // this.state = {
 //      this.ls_length = 0;
 //    //   
@@ -26,8 +26,8 @@ export default class CourierScreen extends React.Component {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
                 method: "GET",
                 headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
                 },
                 credentials: "include",
               }).then((res) => {
@@ -38,6 +38,7 @@ export default class CourierScreen extends React.Component {
                     global.lng_ls = result.data.list[order_num].lng;
                     global.user_id_ls = result.data.list[order_num].userid;
                     global.courier_id_ls = result.data.list[order_num].courierid;  
+                    global.status  = result.data.list[order_num].status;
                     this.forceUpdate(); 
                   })
               } 
@@ -54,8 +55,8 @@ export default class CourierScreen extends React.Component {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
                 method: "GET",
                 headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
                 },
                 credentials: "include",
               }).then((res) => {
@@ -87,10 +88,10 @@ export default class CourierScreen extends React.Component {
       //accept order
       accept_order = () => {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/accept", {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
                 },
                 credentials: "include",
                 body: JSON.stringify({
@@ -104,8 +105,8 @@ export default class CourierScreen extends React.Component {
        return fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token", {
                 method: "POST",
                 headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
                 },
                 credentials: "include",
                 body: JSON.stringify({
@@ -127,21 +128,21 @@ export default class CourierScreen extends React.Component {
       finish_order = () => {//这个地方看看会不会有permission的问题
         this.get_user_token().then( //global
           fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/finish", {
-            method: 'POST',
+            method: "POST",
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
+              Accept: "application/json",
+              "Content-Type": "application/json",
             },
             credentials: "include",
             body: JSON.stringify({
               orderid: global.id_ls,
              }),
           }).then( (res)=>{
-            fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push', {
-            method: 'POST',
+            fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push", {
+            method: "POST",
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
+              Accept: "application/json",
+              "Content-Type": "application/json",
             },
             credentials: "include",
             body: JSON.stringify({
@@ -150,12 +151,12 @@ export default class CourierScreen extends React.Component {
              }),
           }).then( (res)=>{
             global.id_ls = -1;
-            global.content_ls = " ";
+            global.content_ls = "";
             global.lat_ls = -1;
             global.lng_ls = -1;
             global.user_id_ls = -1;
             global.courier_id_ls = -1;
-            global.apptoken = " ";
+            global.apptoken = "";
           })
         })
 
@@ -174,36 +175,36 @@ export default class CourierScreen extends React.Component {
         
            <View style = {styles.btn}>
            <Button 
-                onPress={() => { this.props.navigation.navigate('DashboardScreen') }}
-                title='back'>
+                onPress={() => { this.props.navigation.navigate("DashboardScreen") }}
+                title="back">
            </Button> 
             </View> 
 
           <View style = {styles.btn}>
            <Button 
-                onPress={() => { this.props.navigation.navigate('CourierMap') }}
-                title='Go to Map'>
+                onPress={() => { this.props.navigation.navigate("CourierMap") }}
+                title="Go to Map">
            </Button>  
            </View>
 
         <View style = {styles.btn}>
         <Button 
                 onPress={this.order_list_length.bind(this)}
-                title='Get All Order'>
+                title="Get All Order">
            </Button> 
          </View>
 
          <View style = {styles.btn}>
            <Button 
                 onPress={this.accept_order.bind(this)}
-                title='Accept Order'>
+                title="Accept Order">
            </Button> 
         </View>
            
         <View style = {styles.btn}>
            <Button 
                 onPress={this.finish_order.bind(this)}
-                title='Finish Order'>
+                title="Finish Order">
            </Button> 
         </View>
             {
@@ -227,12 +228,12 @@ export default class CourierScreen extends React.Component {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      backgroundColor: "#fff",
+      justifyContent: "space-between",
+      alignItems: "center",
       margin:40,
       padding: 10,
-      flexDirection: 'column'
+      flexDirection: "column"
     },
     btn:{   
         borderWidth:1,  
@@ -241,15 +242,15 @@ export default class CourierScreen extends React.Component {
         padding: 10, 
         borderColor:"black",  
         backgroundColor:"yellow",  
-        borderStyle: 'dotted'
+        borderStyle: "dotted"
     },
     text:{
       padding:20,
       borderWidth:1,  
       borderRadius:3, 
-      backgroundColor: '#E0FFFF',
-      borderStyle: 'dotted',
+      backgroundColor: "#E0FFFF",
+      borderStyle: "dotted",
       fontSize: 20,
-      fontWeight: 'bold'
+      fontWeight: "bold"
     },
   });

@@ -1,14 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, View,Button } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View,Button } from "react-native";
 import Expo from "expo";
-import * as Facebook from 'expo-facebook';
+import * as Facebook from "expo-facebook";
 import { Notifications } from "expo";
-import * as Permissions from 'expo-permissions';
+import * as Permissions from "expo-permissions";
 
 
 
 
-//import { Container, Content, Header, Form, Input, Item, Label } from 'native-base'
+//import { Container, Content, Header, Form, Input, Item, Label } from "native-base"
 
 export default class LoginScreen extends React.Component {
 
@@ -20,8 +20,8 @@ export default class LoginScreen extends React.Component {
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/check", {
                 method: "GET",
                 headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
                 },
                 credentials: "include",
               }).then((response) => {
@@ -44,7 +44,7 @@ export default class LoginScreen extends React.Component {
     try {
     //face book login    
     const{type,token} = await Facebook.logInWithReadPermissionsAsync
-    ('520578628732460', {permissions: ['public_profile']})  
+    ("520578628732460", {permissions: ["public_profile"]})  
      // push notification token permission
     const { status: existingStatus } = await Permissions.getAsync(
         Permissions.NOTIFICATIONS
@@ -65,7 +65,7 @@ export default class LoginScreen extends React.Component {
         `https://graph.facebook.com/me?access_token=${token}`);
 
        let id = (await response.json()).id;
-       if(typeof id=== 'string' );
+       if(typeof id=== "string" );
       //  console.log("type: ",typeof id);
       //  console.log("face book token: ",token);
       //  console.log("face book name: ",await id);
@@ -79,13 +79,13 @@ export default class LoginScreen extends React.Component {
    }
 
   user_signup = (username, fbtoken,apptoken) => {
-    fetch('http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login', {
-            method: 'POST',
+    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+            method: "POST",
             headers: {
               Accept: "application/json",
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            credentials: 'include',
+            credentials: "include",
             body: JSON.stringify({
               username: username,
               fbtoken: fbtoken,
@@ -106,12 +106,12 @@ export default class LoginScreen extends React.Component {
       
          <Button
                 onPress={this.loginWithFb.bind(this)}
-                title='Sign in with Facebook'>
+                title="Sign in with Facebook">
            </Button>
           
            <Button
-                onPress={() => { this.props.navigation.navigate('DashboardScreen') }}
-                title='Jump to Dashboard'>
+                onPress={() => { this.props.navigation.navigate("DashboardScreen") }}
+                title="Jump to Dashboard">
            
            </Button>
 

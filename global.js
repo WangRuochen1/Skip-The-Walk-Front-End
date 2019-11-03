@@ -6,3 +6,4 @@ global.lng_ls = -1;
 global.user_id_ls = -1;
 global.courier_id_ls = -1;
 global.apptoken = "";
+global.status = -1;

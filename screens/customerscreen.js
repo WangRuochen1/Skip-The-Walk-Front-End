@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { StyleSheet, Text, View,Button,TextInput,Alert } from "react-native";
 import MapView, {AnimatedRegion, Marker, ProviderPropType} from "react-native-maps";
-import SocketIOClient from 'socket.io-client';
-import runicon from '/Users/wangxiaogou/goodProject/assets/run.png';
+import SocketIOClient from "socket.io-client";
+import runicon from "/Users/wangxiaogou/goodProject/assets/run.png";
 
 
 const LATITUDE = 49.267941;
@@ -30,7 +30,7 @@ export default class CustomerScreen extends React.Component {
     }),   
     }
     this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
-    // this.socket.emit('locationIn', JSON.stringify({lat: 12.35, lng: 23.45})); // emits 'hi server' to your server
+    // this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits "hi server" to your server
     this.socket.on("locationOut", (data) => {
       console.log(JSON.parse(data.location))
       let location = {
@@ -44,7 +44,7 @@ export default class CustomerScreen extends React.Component {
 
   // getUserlocHandler = () => {
   //   navigator.geolocation.getCurrentPosition(position=> {
-  //     this.socket.emit('locationIn', JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
+  //     this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude}));
   //   }, err => console.log(err))
   // }
 
@@ -78,7 +78,7 @@ export default class CustomerScreen extends React.Component {
 
 
   get_order_info = ()=>{
-     // let content = 'order content';
+     // let content = "order content";
       let lat = this.state.region.latitude;
       let lng = this.state.region.longitude;
       this.place_order(lat,lng);
@@ -86,10 +86,10 @@ export default class CustomerScreen extends React.Component {
  
   place_order = (lat,lng) => {
     fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/place", {
-            method: 'POST',
+            method: "POST",
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
+              Accept: "application/json",
+              "Content-Type": "application/json",
             },
             credentials: "include",
             body: JSON.stringify({
@@ -122,12 +122,12 @@ export default class CustomerScreen extends React.Component {
       
        
         <Button style={{position: "absolute", bottom: 10,}}
-                onPress={() => { this.props.navigation.navigate('DashboardScreen') }}
-                title='back'
-                color='green'>
+                onPress={() => { this.props.navigation.navigate("DashboardScreen") }}
+                title="back"
+                color="green">
            </Button>  
            <View style = {{position: "absolute", top:20,margin:20 }}>
-             <Text style = {{fontSize:20,fontWeight:'bold'}}>Enter Order Information</Text>
+             <Text style = {{fontSize:20,fontWeight:"bold"}}>Enter Order Information</Text>
            <TextInput 
                       placeholder="Order Information"
                       underlineColorAndroid={"transparent"}//去掉下划线
@@ -136,8 +136,8 @@ export default class CustomerScreen extends React.Component {
             </View>
            <Button style={{position: "absolute", bottom: 40,margin:16}}
                 onPress={this.get_order_info.bind(this)}
-                title='Place Order'
-                color= '#ff9900'>
+                title="Place Order"
+                color= "#ff9900">
            </Button>  
       </View>
       );
@@ -168,5 +168,3 @@ export default class CustomerScreen extends React.Component {
       borderStyle: "dotted"
   },
   });
-
- 
