@@ -62,7 +62,7 @@ export default class CourierScreen extends React.Component {
               }).then((res) => {
                 res.json().then(result=>{
                   console.log("result is :", result.data.list[0]);
-                  console.log("length is:", result.data.list.length)
+                  console.log("length is:", result.data.list.length);
                   global.ls_length = result.data.list.length;//global
                   this.forceUpdate();
                 })
@@ -76,7 +76,7 @@ export default class CourierScreen extends React.Component {
         for( let i = 0; i < global.ls_length; i++) { //global
            buttons.push(
            <Button
-           onPress={()=>{this.list_order(i)}}
+           onPress={()=>{this.list_order(i);}}
            title = {`order ${i}`}
            key = {i}
            ></Button>
@@ -118,10 +118,10 @@ export default class CourierScreen extends React.Component {
                     console.log("apptoken:",apptoken);
                     console.log("userid", global.user_id_ls);
                     this.forceUpdate();
-                  })
+                  });
                    
               } 
-              ).catch(error => console.log(error))
+              ).catch(error => console.log(error));
       }
       
        //finish order
@@ -160,12 +160,10 @@ export default class CourierScreen extends React.Component {
           });
         })
 
-        )
+        );
         
  
       }
-
-
 
 
     render() {   
@@ -175,14 +173,14 @@ export default class CourierScreen extends React.Component {
         
            <View style = {styles.btn}>
            <Button 
-                onPress={() => { this.props.navigation.navigate("DashboardScreen") }}
+                onPress={() => { this.props.navigation.navigate("DashboardScreen"); }}
                 title="back">
            </Button> 
             </View> 
 
           <View style = {styles.btn}>
            <Button 
-                onPress={() => { this.props.navigation.navigate("CourierMap") }}
+                onPress={() => { this.props.navigation.navigate("CourierMap"); }}
                 title="Go to Map">
            </Button>  
            </View>
@@ -254,3 +252,4 @@ export default class CourierScreen extends React.Component {
       fontWeight: "bold"
     },
   });
+  

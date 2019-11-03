@@ -6,7 +6,7 @@ import customer from "./assets/standperson.png";
 
 
 const FadeInView = (props) => {
-  const [fadeAnim] = useState(new Animated.Value(0))  // Initial value for opacity: 0
+  const [fadeAnim] = useState(new Animated.Value(0));  // Initial value for opacity: 0
 
 
   React.useEffect(() => {
@@ -30,8 +30,8 @@ const FadeInView = (props) => {
       {
         iterations: 9999
       }
-    ).start()
-  }, [])
+    ).start();
+  }, []);
 
 
   return (
@@ -44,17 +44,19 @@ const FadeInView = (props) => {
       {props.children}
     </Animated.View>
   );
-}
+};
 
 export default class OpenPage extends Component {
 
   pressLeft = () => {
-    console.log("Pressed left")
+    console.log("Pressed left");
   }
 
   pressRight = () => {
-    console.log("Pressed right")
+    console.log("Pressed right");
   }
+
+  
 
   render() {
     return (
