@@ -115,7 +115,6 @@ export default class CourierScreen extends React.Component {
               }).then((res) => {
                   res.json().then((result) => {
                     global.apptoken = result.data.apptoken;//这里看看这个id可能会有错global
-                    console.log("apptoken:",apptoken);
                     console.log("userid", global.user_id_ls);
                     this.forceUpdate();
                   });

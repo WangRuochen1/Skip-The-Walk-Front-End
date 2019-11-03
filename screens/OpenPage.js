@@ -77,7 +77,7 @@ export default class OpenPage extends Component {
       </View>
     );
   }
-};
+}
 
 
 const styles = StyleSheet.create({

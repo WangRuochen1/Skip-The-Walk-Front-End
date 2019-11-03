@@ -65,7 +65,7 @@ export default class LoginScreen extends React.Component {
         `https://graph.facebook.com/me?access_token=${token}`);
 
        let id = (await response.json()).id;
-       if(typeof id=== "string" );
+       //if(typeof id=== "string" );
       //  console.log("type: ",typeof id);
       //  console.log("face book token: ",token);
       //  console.log("face book name: ",await id);
