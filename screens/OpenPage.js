@@ -1,8 +1,8 @@
-import React, { Component, useState } from 'react';
-import { StyleSheet, Animated, TouchableOpacity, Text, View, Image } from 'react-native';
+import React, { Component, useState } from "react";
+import { StyleSheet, Animated, TouchableOpacity, Text, View, Image } from "react-native";
 
-import courier from './assets/runningman.png';
-import customer from './assets/standperson.png';
+import courier from "./assets/runningman.png";
+import customer from "./assets/standperson.png";
 
 
 const FadeInView = (props) => {
@@ -58,15 +58,15 @@ export default class OpenPage extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, flexDirection: 'row', alignSelf: 'stretch' }}>
-        <TouchableOpacity style={{flex:1, flexDirection: 'column', backgroundColor: 'powderblue', justifyContent:'center', alignItems: 'center'}} onPress={()=> this.pressLeft()} >
+      <View style={{flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
+        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "powderblue", justifyContent:"center", alignItems: "center"}} onPress={()=> this.pressLeft()} >
             
             <Image source={customer} style= {styles.pic2} />
             <Text style = {styles.text}> I want to order! </Text>
             <FadeInView style={styles.myButton2} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{flex:1, flexDirection: 'column', backgroundColor: 'skyblue', justifyContent:'center', alignItems: 'center'}} onPress={()=> this.pressRight()} > 
+        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "skyblue", justifyContent:"center", alignItems: "center"}} onPress={()=> this.pressRight()} > 
             
             <Image source={courier} style={styles.pic} />
             <Text style = {styles.text}> Let me be the courier! </Text>
@@ -80,29 +80,29 @@ export default class OpenPage extends Component {
 
 const styles = StyleSheet.create({
   myButton:{
-    position: 'absolute',
+    position: "absolute",
     bottom: 200,
-    right: '40%',
+    right: "40%",
     flex :1,
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 5,
     height: 30,
     width: 30, 
     borderRadius:60,  
-    backgroundColor:'white',
+    backgroundColor:"white",
 
   },
   myButton2:{
-    position: 'absolute',
+    position: "absolute",
     bottom: 200,
-    right: '40%',
+    right: "40%",
     flex :1,
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 5,
     height: 30,
     width: 30,  
     borderRadius:60, 
-    backgroundColor:'white',
+    backgroundColor:"white",
   },
   pic: {
     width: 200,
@@ -113,11 +113,11 @@ const styles = StyleSheet.create({
     height: 200
   },
   text:{
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 50,
     fontSize: 20,
-    fontFamily: 'Roboto',
-    color : 'white',
-    fontWeight: 'bold'
+    fontFamily: "Roboto",
+    color : "white",
+    fontWeight: "bold"
   }
 });
