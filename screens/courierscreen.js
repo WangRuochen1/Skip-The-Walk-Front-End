@@ -5,21 +5,6 @@ import "../global";
 
 export default class CourierScreen extends React.Component {
 
-//   constructor(props){
-//     super(props);
-//     this.id_ls = 1.0;
-//     this.lng_ls = 5.0;
-//     this.lat_ls = 6.0;
-//     this.content_ls = ""; 
-//     this.user_id_ls = "123";
-//     this.courier_id_ls = "456";  
-//     this.apptoken = "abc";
-//    // this.state = {
-//      this.ls_length = 0;
-//    //   
-// }
-
-
 //get order information
     list_order = (order_num) => {
       console.log("here");
@@ -46,12 +31,8 @@ export default class CourierScreen extends React.Component {
              }
 
 
-     //get order list length
-      //const{ls_length} = this.state;
-       // this.setState({ls_length:ls_length+5})
+     
       order_list_length = () => {
-        // this.ls_length = 5;//这个是假数据，等下要去掉
-        // this.forceUpdate();
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/order/list", {
                 method: "GET",
                 headers: {

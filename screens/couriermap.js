@@ -44,37 +44,6 @@ export default class CourierMap extends React.Component {
     });
   }
 
-//   get_user_token = (id) => {
-//         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/get_token", {
-//                 method: "POST",
-//                 headers: {
-//                   Accept: "application/json",
-//                   "Content-Type": "application/json",
-//                 },
-//                 credentials: "include",
-//               }).then((res) => {
-//                   this.apptoken = res.json()[id].apptoken;//这里看看这个id可能会有错
-//                   this.forceUpdate();
-//               } 
-//               ).catch(error => console.log(error))
-//       }
-      
-//        //finish order
-//       finish_order (){//这个地方看看会不会有permission的问题
-//         this.get_user_token(this.id_ls);
-//         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/push/token", {
-//                 method: "POST",
-//                 headers: {
-//                   Accept: "application/json",
-//                   "Content-Type": "application/json",
-//                 },
-//                 credentials: "include",
-//                 body: JSON.stringify({
-//                  token : this.apptoken, 
-//                  message: "finished"
-//                  }),
-//               })
-//       }
 
   //map goes here
   componentDidMount (){
