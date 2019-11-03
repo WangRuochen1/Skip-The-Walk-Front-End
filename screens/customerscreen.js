@@ -28,16 +28,16 @@ export default class CustomerScreen extends React.Component {
       latitudeDelta: 0,
       longitudeDelta: 0
     }),   
-    }
+    };
     this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
     // this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits "hi server" to your server
     this.socket.on("locationOut", (data) => {
-      console.log(JSON.parse(data.location))
+      console.log(JSON.parse(data.location));
       let location = {
         latitude:JSON.parse(data.location).lat, 
         longitude: JSON.parse(data.location).lng};
-      this.setPosition(location)
-      this.animate(location)
+      this.setPosition(location);
+      this.animate(location);
     });
   }
 
@@ -50,7 +50,7 @@ export default class CustomerScreen extends React.Component {
 
   setPosition = (position) => {
     // console.log(position.latitude)
-    console.log(position.longitude)
+    console.log(position.longitude);
     this.setState({
       region: {
         latitude: position.latitude,
@@ -97,7 +97,7 @@ export default class CustomerScreen extends React.Component {
              lat:lat,
              lng:lng
             }),
-        })
+        });
   }
 
 

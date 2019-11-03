@@ -37,14 +37,14 @@ export default class LoginScreen extends React.Component {
                 })
                 
               } 
-              ).catch(error => console.log(error))
+              ).catch(error => console.log(error));
       }
 
   async loginWithFb(){
     try {
     //face book login    
     const{type,token} = await Facebook.logInWithReadPermissionsAsync
-    ("520578628732460", {permissions: ["public_profile"]})  
+    ("520578628732460", {permissions: ["public_profile"]});  
      // push notification token permission
     const { status: existingStatus } = await Permissions.getAsync(
         Permissions.NOTIFICATIONS
@@ -91,7 +91,7 @@ export default class LoginScreen extends React.Component {
               fbtoken: fbtoken,
               apptoken: apptoken
             }),
-          })
+          });
   }
 
 
@@ -110,7 +110,7 @@ export default class LoginScreen extends React.Component {
            </Button>
           
            <Button
-                onPress={() => { this.props.navigation.navigate("DashboardScreen") }}
+                onPress={() => { this.props.navigation.navigate("DashboardScreen"); }}
                 title="Jump to Dashboard">
            
            </Button>

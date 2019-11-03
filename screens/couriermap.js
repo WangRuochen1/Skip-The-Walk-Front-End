@@ -30,16 +30,16 @@ export default class CourierMap extends React.Component {
       latitudeDelta: 0,
       longitudeDelta: 0
     }),   
-    }
+    };
     this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
     this.socket.emit("join", JSON.stringify({orderid:global.id_ls})); // emits "hi server" to your server
     // this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits "hi server" to your server
     this.socket.on("locationOut", (data) => {
-      console.log(JSON.parse(data.location))
+      console.log(JSON.parse(data.location));
       let location = {
         latitude:JSON.parse(data.location).lat, 
         longitude: JSON.parse(data.location).lng};
-      this.setPosition(location)
+      this.setPosition(location);
       this.animate(location)
     });
   }
@@ -90,12 +90,12 @@ export default class CourierMap extends React.Component {
   getUserlocHandler = () => {
     navigator.geolocation.getCurrentPosition(position=> {
       this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls}));
-    }, err => console.log(err))
+    }, err => console.log(err));
   }
 
   setPosition = (position) => {
     // console.log(position.latitude)
-    console.log(position.longitude)
+    console.log(position.longitude);
     this.setState({
       region: {
         latitude: position.latitude,
@@ -114,7 +114,7 @@ export default class CourierMap extends React.Component {
     this.marker._component.animateMarkerToCoordinate({
       latitude: 60.267941,
       longitude: -123.247360
-    } ,500)
+    } ,500);
   }
 
   animate(location) {
@@ -148,7 +148,7 @@ export default class CourierMap extends React.Component {
           />
         </MapView>
         <Button style={{position: "absolute", bottom: 10}}
-                onPress={() => { this.props.navigation.navigate("CourierScreen") }}
+                onPress={() => { this.props.navigation.navigate("CourierScreen"); }}
                 title="back to courier screen">
            </Button>  
 

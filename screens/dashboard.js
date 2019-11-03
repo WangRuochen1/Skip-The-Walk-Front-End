@@ -14,20 +14,20 @@ export default class DashboardScreen extends React.Component {
 
       <View style = {styles.btn}>
       <Button
-                onPress={() => { this.props.navigation.navigate("LoginScreen") }}
+                onPress={() => { this.props.navigation.navigate("LoginScreen"); }}
                 title="Jump back to login">
            </Button>
       </View>
 
     <View style = {styles.btn}>
      <Button
-                onPress={() => { this.props.navigation.navigate("CourierScreen") }}
+                onPress={() => { this.props.navigation.navigate("CourierScreen"); }}
                 title="I want to be courier">
            </Button>
     </View>
     <View style = {styles.btn}>
      <Button
-                onPress={() => { this.props.navigation.navigate("CustomerScreen") }}
+                onPress={() => { this.props.navigation.navigate("CustomerScreen"); }}
                 title="I want to be customer">
            </Button>
       </View>

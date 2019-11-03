@@ -61,7 +61,7 @@ export default class CourierScreen extends React.Component {
                 credentials: "include",
               }).then((res) => {
                 res.json().then(result=>{
-                  console.log("result is :", result.data.list[0])
+                  console.log("result is :", result.data.list[0]);
                   console.log("length is:", result.data.list.length)
                   global.ls_length = result.data.list.length;//global
                   this.forceUpdate();
@@ -157,7 +157,7 @@ export default class CourierScreen extends React.Component {
             global.user_id_ls = -1;
             global.courier_id_ls = -1;
             global.apptoken = "";
-          })
+          });
         })
 
         )
