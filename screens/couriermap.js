@@ -1,72 +1,96 @@
 import React from "react";
-import { StyleSheet, Text, View,Button,TextInput,Alert } from "react-native";
-import MapView, {AnimatedRegion, Marker, ProviderPropType} from "react-native-maps";
+import { StyleSheet, Image, Text, View, Button, TextInput, TouchableOpacity } from "react-native";
+import MapView, { AnimatedRegion, Marker, ProviderPropType } from "react-native-maps";
 import SocketIOClient from "socket.io-client";
-import runicon from "/Users/wangxiaogou/goodProject/assets/run.png";
 import "../global";
 
+import runicon from "../assets/run.png";
+import locateicon from "../assets/locate.png";
+// import locateUsericon from "../assets/locate_user.png";
 
+
+/* A random latitude and longitude, required for declaring animated Marker
+* interval- set the interval for repeated retrieving the user's location
+*/
 const LATITUDE = 49.267941;
 const LONGITUDE = -123.247360;
 let interval;
 
 export default class CourierMap extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
-    apptoken:"",
-    user_text: "",
-    region: {
-      latitude: 49.267941,
-      longitude: -123.247360,
-      latitudeDelta: 0.00922,
-      longitudeDelta: 0.00200
-    },
-    text: "",
-    coordinate: new AnimatedRegion({
-      latitude: LATITUDE,
-      longitude: LONGITUDE,
-      latitudeDelta: 0,
-      longitudeDelta: 0
-    }),   
+      apptoken: "",
+      user_text: "",
+      region: {
+        latitude: 49.267941,
+        longitude: -123.247360,
+        latitudeDelta: 0.00922,
+        longitudeDelta: 0.00200
+      },
+      text: "",
+      coordinate: new AnimatedRegion({
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+        latitudeDelta: 0,
+        longitudeDelta: 0
+      }),
+      position: {
+        latitude: 49.267941,
+        longitude: -123.247360,
+        latitudeDelta: 0.00922,
+        longitudeDelta: 0.0200
+      }
     };
+    /* Connect to server socket 
+    * join socket io room by order id
+    * listen to event 'locationOut', and update Marker position
+    */
     this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
-    this.socket.emit("join", JSON.stringify({orderid:global.id_ls})); // emits "hi server" to your server
-    // this.socket.emit("locationIn", JSON.stringify({lat: 12.35, lng: 23.45})); // emits "hi server" to your server
+    this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
     this.socket.on("locationOut", (data) => {
-      console.log(JSON.parse(data.location));
       let location = {
-        latitude:JSON.parse(data.location).lat, 
-        longitude: JSON.parse(data.location).lng};
+        latitude: JSON.parse(data.location).lat,
+        longitude: JSON.parse(data.location).lng
+      };
+      //update position on map
       this.setPosition(location);
       this.animate(location);
     });
   }
 
 
-  //map goes here
-  componentDidMount (){
+  /* When component mounts, set up interval to get user location repeatedly */
+  componentDidMount() {
     interval = setInterval(() => {
       this.getUserlocHandler();
-  }, 1000);
+    }, 1000);
   }
 
+  /* Clear the interval when component unmount */
   componentWillUnmount() {
     clearInterval(interval);
   }
 
+  /* Get the current user locatio, by calling navigator.geolocation.getCurrentPosition */
   getUserlocHandler = () => {
     navigator.geolocation.getCurrentPosition((position) => {
-      this.socket.emit("locationIn", JSON.stringify({lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls}));
+      this.socket.emit("locationIn", JSON.stringify({ lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls }));
     }, (err) => console.log(err));
   }
 
-  setPosition = (position) => {
-    // console.log(position.latitude)
-    console.log(position.longitude);
+  /* locate user position and move to current location */
+  locate = (position) => {
     this.setState({
-      region: {
+      region: position
+    })
+  }
+
+  /* update the postion on map */
+  setPosition = (position) => {
+    this.setState({
+      position: {
         latitude: position.latitude,
         longitude: position.longitude,
         latitudeDelta: 0.00922,
@@ -75,17 +99,20 @@ export default class CourierMap extends React.Component {
     });
   }
 
+  /* Triggered when the region on map changes, update region state to current region */
   onRegionChange(region) {
     this.setState({ region });
   }
 
+  /* Move Marker with animation */
   moveMarker() {
     this.marker._component.animateMarkerToCoordinate({
       latitude: 60.267941,
       longitude: -123.247360
-    } ,500);
+    }, 500);
   }
 
+  /* Animation */
   animate(location) {
     const { coordinate } = this.state;
     const newCoordinate = {
@@ -94,65 +121,64 @@ export default class CourierMap extends React.Component {
     };
 
     coordinate.timing(newCoordinate).start();
-}
+  }
 
-
-  
-
-  
-    render() {
-      return (
-        <View style = {styles.container}>
-           <MapView 
-        provider={this.props.provider}
-        region={this.state.region} 
-        onRegionChange={() => this.onRegionChange}
-        style ={{flex:1}} >
-           <Marker.Animated
+  render() {
+    return (
+      <View style={styles.container}>
+        <MapView
+          provider={this.props.provider}
+          region={this.state.region}
+          showsUserLocation = {true}
+          followsUserLocation = {true}
+          onRegionChangeComplete={this.onRegionChange.bind(this)}
+          style={{ flex: 1 }} >
+          <Marker.Animated
             ref={(marker) => {
               this.marker = marker;
             }}
             coordinate={this.state.coordinate}
-            image = {runicon}
+            image={runicon}
           />
         </MapView>
-        <Button style={{position: "absolute", bottom: 10}}
-                onPress={() => { this.props.navigation.navigate("CourierScreen"); }}
-                title="back to courier screen">
-           </Button>  
-
-        {/* <View style = {styles.btn}>
-           <Button 
-                onPress={this.finish_order.bind(this)}
-                title="Finish Order">
-           </Button> 
-        </View> */}
+        <Button style={{ position: "absolute", bottom: 10 }}
+          onPress={() => { this.props.navigation.navigate("CourierScreen"); }}
+          title="back to courier screen">
+        </Button>
+        <TouchableOpacity style={{ position: "absolute", bottom: 60, right: 20, borderColor: 'black' }}
+          onPress={() => this.locate(this.state.position)} >
+          <Image source={locateicon} style={{ width: 30, height: 30 }} />
+        </TouchableOpacity>
+        {/* <TouchableOpacity style={{ position: "absolute", bottom: 60, right: 20, borderColor: 'black' }}
+          onPress={() => this.locate()} >
+          <Image source={locateicon} style={{ width: 30, height: 30 }} />
+        </TouchableOpacity> */}
       </View>
-      );
-    }
-  
-  
+    );
   }
 
-  CourierMap.propTypes = {
-    provider: ProviderPropType,
-  };
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#fff",
-      justifyContent: "center",
-      padding: 0,
-      margin: 0
-    },
-    btn:{   
-        borderWidth:1,  
-        borderRadius:3, 
-        margin: 10,
-        padding: 10, 
-        borderColor:"black",  
-        backgroundColor:"yellow",  
-        borderStyle: "dotted"
-    },
-  });
+
+}
+
+CourierMap.propTypes = {
+  provider: ProviderPropType,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    padding: 0,
+    margin: 0
+  },
+  btn: {
+    borderWidth: 1,
+    borderRadius: 3,
+    margin: 10,
+    padding: 10,
+    borderColor: "black",
+    backgroundColor: "yellow",
+    borderStyle: "dotted"
+  },
+});
