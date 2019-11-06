@@ -217,7 +217,6 @@ export default class CourierScreen extends React.Component {
             <Text style={styles.text}>Total order number : {global.ls_length}</Text>
             <Text style={styles.text}>Order ID :{global.id_ls}</Text>
       </View>
-
       );
     }
   

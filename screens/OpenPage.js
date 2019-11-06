@@ -1,8 +1,8 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, Animated, TouchableOpacity, Text, View, Image } from "react-native";
 
-import courier from "./assets/runningman.png";
-import customer from "./assets/standperson.png";
+import courier from "../assets/runningman.png";
+import customer from "../assets/standperson.png";
 
 
 const FadeInView = (props) => {
@@ -48,12 +48,109 @@ const FadeInView = (props) => {
 
 export default class OpenPage extends Component {
 
-  pressLeft = () => {
-    console.log("Pressed left");
+  componentDidMount() {
+    this.check_login();
   }
 
+/*check if user have loged in before, if true we skip the facebook login screen
+*/ 
+
+check_login = () => {
+    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/check", {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }).then((response) => {
+            response.json().then((result) => {
+              if(result.errno == 1){
+                alert(`Please Choose Your Role and Sign In with Facebook`);
+             }else{
+                if(result.usermode == "courier"){
+                  this.props.navigation.navigate("CourierScreen");
+                }else if(result.usermode == "customer"){
+                  this.props.navigation.navigate("CustomerScreen");
+                }
+             }
+            });
+            
+          } 
+          ).catch((error) => console.log(error));
+  }
+
+  /**face book log in function, call face book API to log in 
+   * send backend with token and user name/ID
+   * 
+   */
+  async loginWithFb(){
+    try {
+    //face book login    
+    const{type,token} = await Facebook.logInWithReadPermissionsAsync
+    ("520578628732460", {permissions: ["public_profile"]});  
+     // push notification token permission
+    const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+      );
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        return;
+      }
+      let apptoken = await Notifications.getExpoPushTokenAsync();
+
+    //call function to return value
+    if(type =="success"){
+      const response = await fetch(
+        `https://graph.facebook.com/me?access_token=${token}`);
+
+       let id = (await response.json()).id;
+       this.user_signup(id,token,apptoken);
+    }
+  }catch ({ message }) {
+        alert(`${message}`);
+      }
+  
+   }
+
+
+   user_signup = (username, fbtoken,apptoken) => {
+    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              username: username,
+              fbtoken: fbtoken,
+              apptoken: apptoken,
+              usermode: global.role
+            }),
+          });
+  }
+
+  /*left means he/she wants to be courier, set 0 for courier*/
+  pressLeft = () => {
+    console.log("Pressed left");
+    global.role = "courier";
+    this.loginWithFb();
+    this.props.navigation.navigate("CourierScreen");
+    
+    
+  }
+
+   /*left means he/she wants to be customer,set 1 for customer */
   pressRight = () => {
     console.log("Pressed right");
+    global.role = "customer";
+    this.loginWithFb();
+    this.props.navigation.navigate("CustomerScreen");
   }
 
 
