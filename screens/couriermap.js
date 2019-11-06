@@ -3,6 +3,8 @@ import { StyleSheet, Image, Text, View, Button, TextInput, TouchableOpacity } fr
 import MapView, { AnimatedRegion, Marker, ProviderPropType } from "react-native-maps";
 import SocketIOClient from "socket.io-client";
 import "../global";
+import { URL, WebSocketPORT } from '../src/conf'
+
 
 import runicon from "../assets/run.png";
 import locateicon from "../assets/locate.png";
@@ -47,7 +49,7 @@ export default class CourierMap extends React.Component {
     * join socket io room by order id
     * listen to event 'locationOut', and update Marker position
     */
-    this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
+    this.socket = SocketIOClient(`${URL}:${WebSocketPORT}`);
     this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
     this.socket.on("locationOut", (data) => {
       let location = {
