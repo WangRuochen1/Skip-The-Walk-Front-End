@@ -1,12 +1,13 @@
 import React from "react";
-import { StyleSheet, Text, Image, View, Button, TextInput, 
-  PanResponder,TouchableOpacity, TimePickerAndroid, Alert, ToastAndroid } from "react-native";
+import {
+  StyleSheet, Text, Image, View, Button, TextInput,
+  PanResponder, TouchableOpacity, TimePickerAndroid, Alert, ToastAndroid
+} from "react-native";
 import MapView, { AnimatedRegion, Marker, ProviderPropType } from "react-native-maps";
 import SocketIOClient from "socket.io-client";
 import Modal from "react-native-modal";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { URL, PORT, WebSocketPORT } from '../src/conf'
-import {createStackNavigator,} from 'react-navigation-stack';
+import { URL, PORT, WebSocketPORT, APIKEY } from '../src/conf'
 
 import runicon from "../assets/run.png";
 import locateicon from "../assets/locate.png";
@@ -24,23 +25,20 @@ export default class CustomerScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
 
-      },
-      onPanResponderMove: (evt, gestureState) => {
+    /* Movable view initilization and operation, might be used later */
+    // const movablePosition = new Animated.ValueXY();
+    // const panResponder = PanResponder.create({
+    //   onStartShouldSetPanResponder: () => true,
+    //   onPanResponderMove: (event, gesture) => {
+    //     movablePosition.setValue({ x: gesture.dx, y: gesture.dy });
+    //   }
+    // });
 
-      },
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (evt, gestureState) => {
-
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-
-      },
-    });
     this.state = {
       user_text: "",
+      // panResponder,
+      // movablePosition,
       showOderInfo: false,
       region: {
         latitude: 49.267941,
@@ -48,7 +46,6 @@ export default class CustomerScreen extends React.Component {
         latitudeDelta: 0.00922,
         longitudeDelta: 0.0200
       },
-      text: "",
       coordinate: new AnimatedRegion({
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -64,7 +61,7 @@ export default class CustomerScreen extends React.Component {
       orderTime: {
         hour: -1,
         minute: -1
-      }
+      },
     };
     /* Connect to server socket 
     * join socket io room by order id
@@ -116,6 +113,7 @@ export default class CustomerScreen extends React.Component {
     coordinate.timing(newCoordinate).start();
   }
 
+  /* place order handler */
   get_order_info = () => {
     if (this.state.user_text === "") {
       Alert.alert('Invalid order', 'Please enter order content!');
@@ -128,13 +126,13 @@ export default class CustomerScreen extends React.Component {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log(position.coords.latitude)
       console.log(position.coords.longitude)
-      this.place_order(position.coords.latitude, position.coords.longitude);
+      this.place_order(position.coords.latitude, position.coords.longitude, `${this.state.orderTime.hour}:${this.state.orderTime.minute}:00`);
     }, (err) => console.log(err));
   }
 
   /* place a order */
-  place_order = (lat, lng) => {
-    fetch(`${URL}:${WebSocketPORT}/order/place`, {
+  place_order = (lat, lng, time) => {
+    fetch(`${URL}:${PORT}/order/place`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -144,7 +142,8 @@ export default class CustomerScreen extends React.Component {
       body: JSON.stringify({
         content: this.state.user_text,
         lat: lat,
-        lng: lng
+        lng: lng,
+        time: time
       }),
     }).then(() => {
       this.setState({ showOderInfo: false });
@@ -168,6 +167,8 @@ export default class CustomerScreen extends React.Component {
     this.setState({ showOderInfo: false });
   }
 
+
+
   /* Time picker */
   async pickTime() {
     try {
@@ -190,6 +191,7 @@ export default class CustomerScreen extends React.Component {
   }
 
   render() {
+    // let handles = this.state.panResponder.panHandlers;
     return (
       <View style={styles.container}>
         <MapView
@@ -206,40 +208,45 @@ export default class CustomerScreen extends React.Component {
           />
         </MapView>
         {/* TODO: Movavle view, try put it under the map.... */}
-        <View style={styles.calloutView} {...this._panResponder.panHandlers} />
+        {/* <Animated.View
+            style={[styles.circle, this.state.movablePosition.getLayout()]}
+            {...handles}
+         /> */}
+        <View style={styles.searchBar}>
+          <GooglePlacesAutocomplete
+            placeholder='Enter Location'
+            minLength={2}
+            autoFocus={false}
+            returnKeyType={'default'}
+            fetchDetails={true}
 
-        {/* TODO: AUTOcomplete google search, put it some where.... */}
-        {/* <GooglePlacesAutocomplete
-          placeholder='Enter Location'
-          minLength={2}
-          autoFocus={false}
-          returnKeyType={'default'}
-          fetchDetails={true}
-          styles={{
-            textInputContainer: {
-              position:'absolute',
-              top: 20,
-              backgroundColor: 'rgba(0,0,0,0)',
-              borderTopWidth: 0,
-              borderBottomWidth: 0
-            },
-            textInput: {
-              position: 'absolute',
-              top: 30,
-              marginLeft: 0,
-              marginRight: 0,
-              height: 38,
-              color: '#5d5d5d',
-              fontSize: 16
-            },
-            predefinedPlacesDescription: {
-              position: 'absolute',
-              top: 40,
-              color: '#1faadb'
-            },
-          }}
-          currentLocation={false}
-        /> */}
+            query={{
+              // available options: https://developers.google.com/places/web-service/autocomplete
+              key: APIKEY,
+              language: 'en', // language of the results
+              // types: '(cities)' // default: 'geocode'
+            }}
+
+            styles={{
+              textInputContainer: {
+                backgroundColor: 'white',
+                borderTopWidth: 0,
+                borderBottomWidth: 0
+              },
+              textInput: {
+                marginLeft: 0,
+                marginRight: 0,
+                height: 38,
+                color: '#5d5d5d',
+                fontSize: 16
+              },
+              predefinedPlacesDescription: {
+                color: '#1faadb'
+              },
+            }}
+            currentLocation={false}
+          />
+        </View>
         <View style={{ position: "absolute", top: 50, height: 60, marginVertical: 20 }}>
           <Button
             onPress={() => { this.props.navigation.navigate("DashboardScreen"); }}
@@ -257,6 +264,7 @@ export default class CustomerScreen extends React.Component {
 
         <Modal isVisible={this.state.showOderInfo}>
           <View style={{ position: "absolute", bottom: 200, alignSelf: 'center' }}>
+
             <Text style={{ fontSize: 20, fontWeight: "bold", color: 'white', marginVertical: 20 }}>Enter Order Information</Text>
             <TextInput
               placeholder="Order Information"
@@ -305,8 +313,8 @@ const styles = StyleSheet.create({
   },
   calloutView: {
     position: 'absolute',
-    top: 20,
-    flexDirection: "row",
+    bottom: 20,
+    backgroundColor: 'black',
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 10,
     width: "40%",
@@ -322,4 +330,19 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 0.0
   },
+  searchBar: {
+    position: "absolute",
+    top: 20,
+    alignSelf: 'center',
+    borderRadius: 10,
+    width: '80%',
+    height: '50%'
+  },
+  // circle: {
+  //   // position: 'absolute',
+  //   // bottom: 20,
+  //   backgroundColor: "skyblue",
+  //   width: '100%',
+  //   height: 100,
+  // }
 });
