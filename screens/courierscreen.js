@@ -24,11 +24,14 @@ export default class CourierScreen extends React.Component {
                   res.json().then(result =>{
                     global.id_ls = result.data.list[order_num].id;//global
                     global.content_ls = result.data.list[order_num].content;
-                    global.lat_ls = result.data.list[order_num].lat;
-                    global.lng_ls = result.data.list[order_num].lng;
-                    global.user_id_ls = result.data.list[order_num].userid;
-                    global.courier_id_ls = result.data.list[order_num].courierid;  
                     global.status  = result.data.list[order_num].status;
+                    var joined = this.state.myArray.concat(result.data.list);
+                    global.id_ls = result.data.list[order_num].id;
+                    global.content_ls = result.data.list[order_num].content;
+                    global.status  = result.data.list[order_num].status;
+                    global.locFrom  = result.data.list[order_num].locFrom;
+                    global.locTo  = result.data.list[order_num].locTo;
+                    global.time  = result.data.list[order_num].time;
                     this.forceUpdate(); 
                   })
               } 

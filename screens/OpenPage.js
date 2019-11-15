@@ -1,8 +1,12 @@
 import React, { Component, useState } from "react";
 import { StyleSheet, Animated, TouchableOpacity, Text, View, Image } from "react-native";
-
+import * as Facebook from "expo-facebook";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
 import courier from "../assets/runningman.png";
 import customer from "../assets/standperson.png";
+import "../global";
+
 
 
 const FadeInView = (props) => {
@@ -48,6 +52,7 @@ const FadeInView = (props) => {
 
 export default class OpenPage extends Component {
 
+  
   componentDidMount() {
     this.check_login();
   }
@@ -68,17 +73,25 @@ check_login = () => {
               if(result.errno == 1){
                 alert(`Please Choose Your Role and Sign In with Facebook`);
              }else{
-                if(result.usermode == "courier"){
-                  this.props.navigation.navigate("CourierScreen");
-                }else if(result.usermode == "customer"){
-                  this.props.navigation.navigate("CustomerScreen");
-                }
+                if(result.data.usermode == "courier"){
+                    global.role = "courier";
+                    this.props.navigation.navigate("CourierScreen");
+                    }else if(result.data.usermode == "customer"){
+                    global.role = "customer";
+                    this.props.navigation.navigate("CustomerScreen");
+                    }
              }
+             global.username = result.data.username;
+             global.phoneNum = phonenum;
+             console.log("result");
+             console.log(result.data.username);
+             console.log(global.username);
             });
             
           } 
           ).catch((error) => console.log(error));
   }
+
 
   /**face book log in function, call face book API to log in 
    * send backend with token and user name/ID
@@ -130,7 +143,7 @@ check_login = () => {
               username: username,
               fbtoken: fbtoken,
               apptoken: apptoken,
-              usermode: global.role
+              usermode: global.role,
             }),
           });
   }
@@ -171,6 +184,8 @@ check_login = () => {
             <Text style = {styles.text}> Let me be the courier! </Text>
             <FadeInView style={styles.myButton} />
         </TouchableOpacity>
+
+
       </View>
     );
   }
@@ -215,8 +230,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 50,
     fontSize: 20,
-    fontFamily: "Roboto",
+    //fontFamily: "Times",
     color : "white",
     fontWeight: "bold"
+  },
+  lottie: {
+    width: 100,
+    height: 100
   }
 });

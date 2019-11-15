@@ -6,10 +6,15 @@ import SocketIOClient from "socket.io-client";
 import Modal from "react-native-modal";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { URL, PORT, WebSocketPORT } from '../src/conf'
+import {createStackNavigator,} from 'react-navigation-stack';
 
 import runicon from "../assets/run.png";
 import locateicon from "../assets/locate.png";
-// import locateUsericon from "../assets/locate_user.png";
+
+
+
+import DashboardScreen from "/Users/wangxiaogou/goodProject/screens/dashboard";
+
 
 /* A random latitude and longitude, required for declaring animated Marker*/
 const LATITUDE = 49.267941;
@@ -275,6 +280,7 @@ export default class CustomerScreen extends React.Component {
 
 
 }
+
 
 
 CustomerScreen.propTypes = {

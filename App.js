@@ -1,89 +1,75 @@
-// import React from "react";
-// import { StyleSheet, Text, View } from "react-native";
-// import { createAppContainer, createSwitchNavigator,createBottomTabNavigator } from "react-navigation";
-
-
-// //import LoginScreen from "./screens/login_screen";
-// import DashboardScreen from "./screens/dashboard";
-// import CustomerScreen from "./screens/customerscreen";
-// import CourierScreen from "./screens/courierscreen";
-// import CourierMap from "./screens/couriermap";
-// //import OpenPage from "./screens/OpenPage";
-// // import Navigate_bar from "./screens/navigation";
-// //import { createBottomTabNavigator } from 'react-navigation-tabs';
-// //import TabNavigator from 'react-native-tab-navigator';
-
-// export default class App extends React.Component {
-
-//   render() {
-//       return (  
-//              <AppNavigator/> 
-//       );  
-    
-//   }
-// }
-
-// const TabNavigator = createBottomTabNavigator({
-//   Home: { screen: CourierScreen },
-//   Settings: { screen: DashboardScreen },
-// });
-
-// /* Navigation between each map
-// */
-// const AppSwitchNavigator = createSwitchNavigator({
-//  // OpenPage : OpenPage,
-//  // LoginScreen: LoginScreen,
-//   DashboardScreen: DashboardScreen,
-//   CourierScreen: CourierScreen,
-//   CustomerScreen: CustomerScreen,
-//   CourierMap: CourierMap,
-// });
-
-// const AppNavigator = createAppContainer(AppSwitchNavigator);
-// //const Tabcontainer = createAppContainer(TabNavigator);
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center"
-//   },
-//   myImage:{
-//     width:22,
-//     height:22,
-// }
-
-// });
-
-
 import React from 'react';
-import { Text, View } from 'react-native';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { Button, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import {  createAppContainer } from 'react-navigation';
+import {createStackNavigator,} from 'react-navigation-stack';
+import {createBottomTabNavigator,} from 'react-navigation-tabs';
 
-class HomeScreen extends React.Component {
+import OpenPage from "./screens/OpenPage";
+import LoginScreen from "./screens/login_screen";
+import DashboardScreen from "./screens/dashboard";
+import CustomerScreen from "./screens/customerscreen";
+import CourierScreen from "./screens/courierscreen";
+import CourierMap from "./screens/couriermap";
+import OrderPage from "./screens/OrderPage";
+import Setting from "./screens/setting";
+//  import DashboardStack from "./screens/dashboard";
+//  import CustomerStack from "./screens/customerscreen";
+
+
+// const  DashboardStack= createStackNavigator({
+//   LoginScreen: { screen: LoginScreen },
+//   CourierScreen: { screen: CourierScreen },
+//   CustomerScreen: { screen: CustomerScreen },
+// });
+
+// const CustomerStack = createStackNavigator({
+//   DashboardScreen: { screen: DashboardScreen },
+// });
+// const SettingsStack = createStackNavigator({
+//   SettingsScreen: { screen: SettingsScreen },
+//   DetailsScreen: { screen: DetailsScreen },
+// });
+
+export default class App extends React.Component {
   render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home!</Text>
-      </View>
-    );
+    return <APPNavigator/>;
   }
 }
 
-class SettingsScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings!</Text>
-      </View>
-    );
-  }
-}
+const APPNavigator = createAppContainer(
+  createBottomTabNavigator(
+    {
+      OpenPage: {screen: OpenPage},
+      Setting:  {screen: Setting},
+      OrderPage: {screen: OrderPage},
+      DashboardScreen: { screen: DashboardScreen },
+      CustomerScreen: { screen: CustomerScreen},
+      CourierScreen: {screen: CourierScreen},
+      CourierMap: {screen: CourierMap},
+      
+    },
+    // {
+    //   defaultNavigationOptions: ({ navigation }) => ({
+    //     tabBarIcon: ({ focused, tintColor }) => {
+    //       const { routeName } = navigation.state;
+    //       let iconName;
+    //       if (routeName === 'Dashboard') {
+    //         iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+    //       } else if (routeName === 'Customer') {
+    //         iconName = `ios-options${focused ? '' : '-outline'}`;
+    //       }
+  
+    //       // You can return any component that you like here! We usually use an
+    //       // icon component from react-native-vector-icons
+    //       return <Ionicons name={iconName} size={25} color={tintColor} />;
+    //     },
+    //   }),
+    //   tabBarOptions: {
+    //     activeTintColor: 'tomato',
+    //     inactiveTintColor: 'gray',
+    //   },
+    // }
+  )
+);
 
-const TabNavigator = createBottomTabNavigator({
-  Home: { screen: HomeScreen },
-  Settings: { screen: SettingsScreen },
-});
-
-export default createAppContainer(TabNavigator);

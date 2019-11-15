@@ -1,13 +1,18 @@
 import React from "react";
 import { StyleSheet, Text, View,Button } from "react-native";
+import {createStackNavigator,} from 'react-navigation-stack';
+
+
+import LoginScreen from "/Users/wangxiaogou/goodProject/screens/login_screen";
+import CustomerScreen from "/Users/wangxiaogou/goodProject/screens/customerscreen";
+import CourierScreen from "/Users/wangxiaogou/goodProject/screens/courierscreen";
+
 
 /*DashBoard screen if for test use, the recent update is in openpages and 
 login_screen, if you are doing code review, you can 
  */
+
 export default class DashboardScreen extends React.Component {
-  
-  
-  
   
   render() {
     return (
@@ -39,6 +44,9 @@ export default class DashboardScreen extends React.Component {
 
 
 }
+
+
+
 
 const styles = StyleSheet.create({
   container: {
