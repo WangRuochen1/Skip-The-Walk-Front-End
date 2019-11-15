@@ -11,7 +11,7 @@ import DashboardScreen from "./screens/dashboard";
 import CustomerScreen from "./screens/customerscreen";
 import CourierScreen from "./screens/courierscreen";
 import CourierMap from "./screens/couriermap";
-import OrderPage from "./screens/OrderPage";
+import OrderList from "./screens/OrderList";
 import Setting from "./screens/setting";
 //  import DashboardStack from "./screens/dashboard";
 //  import CustomerStack from "./screens/customerscreen";
@@ -42,7 +42,7 @@ const APPNavigator = createAppContainer(
     {
       OpenPage: {screen: OpenPage},
       Setting:  {screen: Setting},
-      OrderPage: {screen: OrderPage},
+      OrderList: {screen: OrderList},
       DashboardScreen: { screen: DashboardScreen },
       CustomerScreen: { screen: CustomerScreen},
       CourierScreen: {screen: CourierScreen},
