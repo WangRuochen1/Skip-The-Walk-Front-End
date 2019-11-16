@@ -23,21 +23,8 @@ export default class App extends React.Component {
 }
 
 
-// const APPNavigator = createAppContainer(
-//   createSwitchNavigator({
-//       OpenPage: {screen: OpenPage},
-//       Setting:  {screen: Setting},
-//       OrderList: {screen: OrderList},
-//       OrderScreen:{screen: OrderScreen},
-//       CustomerScreen: { screen: CustomerScreen},
-//       CourierMap: {screen: CourierMap},
-//       AddressScreen:{screen: AddressScreen},
-//   })
-// )
-
 const APPNavigator = createAppContainer(
-  createBottomTabNavigator(
-    {
+  createSwitchNavigator({
       OpenPage: {screen: OpenPage},
       Setting:  {screen: Setting},
       OrderList: {screen: OrderList},
@@ -45,10 +32,23 @@ const APPNavigator = createAppContainer(
       CustomerScreen: { screen: CustomerScreen},
       CourierMap: {screen: CourierMap},
       AddressScreen:{screen: AddressScreen},
-    },
+  })
+)
+
+// const APPNavigator = createAppContainer(
+//   createBottomTabNavigator(
+//     {
+//       OpenPage: {screen: OpenPage},
+//       Setting:  {screen: Setting},
+//       OrderList: {screen: OrderList},
+//       OrderScreen:{screen: OrderScreen},
+//       CustomerScreen: { screen: CustomerScreen},
+//       CourierMap: {screen: CourierMap},
+//       AddressScreen:{screen: AddressScreen},
+//     },
  
-  )
-);
+//   )
+// );
 
 
 
