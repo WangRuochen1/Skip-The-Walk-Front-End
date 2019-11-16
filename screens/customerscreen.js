@@ -338,11 +338,4 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '50%'
   },
-  // circle: {
-  //   // position: 'absolute',
-  //   // bottom: 20,
-  //   backgroundColor: "skyblue",
-  //   width: '100%',
-  //   height: 100,
-  // }
 });

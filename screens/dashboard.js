@@ -1,12 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, View,Button } from "react-native";
-import {createStackNavigator,} from 'react-navigation-stack';
+import { StyleSheet, Text, View,Button} from "react-native";
+import {createStackNavigator} from 'react-navigation-stack';
+import {createSwitchNavigator } from 'react-navigation';
 
+import OrderList from "../screens/OrderList";
+import CustomerScreen from "../screens/customerscreen";
+import CourierScreen from "../screens/courierscreen";
 
-import LoginScreen from "/Users/wangxiaogou/goodProject/screens/login_screen";
-import CustomerScreen from "/Users/wangxiaogou/goodProject/screens/customerscreen";
-import CourierScreen from "/Users/wangxiaogou/goodProject/screens/courierscreen";
-
+export const DashBoardStack = createStackNavigator({
+  OrderList: OrderList ,
+  CourierScreen: CourierScreen ,
+  CustomerScreen: CustomerScreen,
+});
+  
 
 /*DashBoard screen if for test use, the recent update is in openpages and 
 login_screen, if you are doing code review, you can 
@@ -21,7 +27,7 @@ export default class DashboardScreen extends React.Component {
 
       <View style = {styles.btn}>
       <Button
-                onPress={() => { this.props.navigation.navigate("LoginScreen"); }}
+                onPress={() => { this.props.navigation.navigate("OrderList"); }}
                 title="Jump back to login">
            </Button>
       </View>
@@ -44,6 +50,7 @@ export default class DashboardScreen extends React.Component {
 
 
 }
+
 
 
 
