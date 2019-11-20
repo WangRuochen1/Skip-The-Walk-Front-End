@@ -75,7 +75,7 @@ check_login = () => {
              }else{
                 if(result.data.usermode == "courier"){
                     global.role = "courier";
-                    this.props.navigation.navigate("CourierScreen");
+                    this.props.navigation.navigate("OrderList");
                     }else if(result.data.usermode == "customer"){
                     global.role = "customer";
                     this.props.navigation.navigate("CustomerScreen");
@@ -153,7 +153,7 @@ check_login = () => {
     console.log("Pressed left");
     global.role = "courier";
     this.loginWithFb();
-    this.props.navigation.navigate("CourierScreen");
+    this.props.navigation.navigate("OrderList");
     
     
   }

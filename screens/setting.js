@@ -30,6 +30,11 @@ export default class Setting extends React.Component {
               }); 
               global.role = mode;
               this.toggleModal();
+              if(global.role === "courier"){
+                this.props.navigation.navigate("OrderList");
+              }else{
+                this.props.navigation.navigate("CustomerScreen");
+              }
       }
 
       set_phone = () => {

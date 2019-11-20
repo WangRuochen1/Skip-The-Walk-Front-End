@@ -12,6 +12,8 @@ import timeIcon from '../assets/time.png';
 import contentIcon from '../assets/content.png';
 //import confirmIcon from '../assets/confirm.png';
 import TopBar from "../src/utils/TopBar";
+
+
 export default class OrderScreen extends React.Component {
 
     constructor(props) {

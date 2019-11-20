@@ -1,17 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View,Button} from "react-native";
-import {createStackNavigator} from 'react-navigation-stack';
-import {createSwitchNavigator } from 'react-navigation';
 
-import OrderList from "../screens/OrderList";
-import CustomerScreen from "../screens/customerscreen";
-import CourierScreen from "../screens/courierscreen";
 
-export const DashBoardStack = createStackNavigator({
-  OrderList: OrderList ,
-  CourierScreen: CourierScreen ,
-  CustomerScreen: CustomerScreen,
-});
   
 
 /*DashBoard screen if for test use, the recent update is in openpages and 

@@ -4,8 +4,6 @@ import "../global";
 import { URL, PORT } from '../src/conf';
 
 
-
-
 export default class OrderList extends React.Component {
    
      state = { 
@@ -82,7 +80,7 @@ export default class OrderList extends React.Component {
     }
  
    
-    accept_order = (order_id) => {
+    accept_order = (order_id,curlat,curlng) => {
       
       fetch(`${URL}:${PORT}/order/accept`, {
               method: "POST",
@@ -92,7 +90,8 @@ export default class OrderList extends React.Component {
               },
               credentials: "include",
               body: JSON.stringify({
-               orderid: order_id, //????????????
+               orderid: order_id, 
+               
                }),
             });
             Alert.alert("successfully accepted");
@@ -109,7 +108,9 @@ export default class OrderList extends React.Component {
                credentials: "include",
                body: JSON.stringify({
                  //userid: global.user_id_ls,
-                 userid: userid
+                 userid: userid,
+                 curlat: curlat,
+                 curlng: curlng,
                  }),
              }).then((res) => {
                  res.json().then((result) => {
@@ -158,7 +159,7 @@ export default class OrderList extends React.Component {
       <View>
         {item.status === 1?<Text style = {styles.text}>content={item.content} | placed</Text>:<Text style = {styles.text}>content={item.content} | accepted</Text>}
         <View style = {styles.btn}>
-        <Button title =  {`order ${item.id} accept above order`} onPress = {()=>this.accept_order(item.id)}></Button>
+        <Button title =  {`order ${item.id} accept above order`} onPress = {()=>this.accept_order(item.id,item.curlat,item.curlng)}></Button>
         </View>  
         <View style = {styles.btn}>
         <Button title =  {"Finish this order"} onPress = {()=>this.finish_order(item.id,item.userid)}></Button>

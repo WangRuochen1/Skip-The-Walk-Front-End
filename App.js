@@ -15,6 +15,11 @@ import OrderList from "./screens/OrderList";
 import Setting from "./screens/setting";
 import OrderScreen from "./screens/PlaceorderPage";
 import AddressScreen from "./screens/address";
+import {CourierMapStack} from "./screens/couriermap";
+import {CustomerStack} from "./screens/customerscreen";
+import {PlaceOrderStack} from "./screens/PlaceorderPage";
+import {courierStack} from "./src/utils/navigators";
+import {customerStack} from "./src/utils/navigators";
 
 export default class App extends React.Component {
   render() {
@@ -26,29 +31,12 @@ export default class App extends React.Component {
 const APPNavigator = createAppContainer(
   createSwitchNavigator({
       OpenPage: {screen: OpenPage},
-      Setting:  {screen: Setting},
-      OrderList: {screen: OrderList},
-      OrderScreen:{screen: OrderScreen},
-      CustomerScreen: { screen: CustomerScreen},
-      CourierMap: {screen: CourierMap},
-      AddressScreen:{screen: AddressScreen},
+      courierStack: courierStack,
+      customerStack: customerStack,
   })
 )
 
-// const APPNavigator = createAppContainer(
-//   createBottomTabNavigator(
-//     {
-//       OpenPage: {screen: OpenPage},
-//       Setting:  {screen: Setting},
-//       OrderList: {screen: OrderList},
-//       OrderScreen:{screen: OrderScreen},
-//       CustomerScreen: { screen: CustomerScreen},
-//       CourierMap: {screen: CourierMap},
-//       AddressScreen:{screen: AddressScreen},
-//     },
- 
-//   )
-// );
+
 
 
 
