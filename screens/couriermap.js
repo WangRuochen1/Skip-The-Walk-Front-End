@@ -1,10 +1,14 @@
 import React from "react";
-import { StyleSheet, Image, Text, View, Button, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, Image, Text, View, Alert, TextInput, TouchableOpacity } from "react-native";
 import MapView, { AnimatedRegion, Marker, ProviderPropType } from "react-native-maps";
+// import { MapView } from 'expo';
 import SocketIOClient from "socket.io-client";
 import "../global";
+import { URL, PORT, WebSocketPORT } from '../src/conf'
 
-import runicon from "../assets/run.png";
+
+import customer from "../assets/customer.png";
+import backicon from "../assets/back.png";
 import locateicon from "../assets/locate.png";
 // import locateUsericon from "../assets/locate_user.png";
 
@@ -12,9 +16,15 @@ import locateicon from "../assets/locate.png";
 /* A random latitude and longitude, required for declaring animated Marker
 * interval- set the interval for repeated retrieving the user's location
 */
-const LATITUDE = 49.267941;
-const LONGITUDE = -123.247360;
-let interval;
+const LATITUDE = 49.267941; //a random number for the initial region
+const LONGITUDE = -123.247360; //a random number as well.... 
+const initRegion = {
+  latitude: 49.267941,
+  longitude: -123.247360,
+  latitudeDelta: 0.00922,
+  longitudeDelta: 0.0200
+};
+var interval;
 
 export default class CourierMap extends React.Component {
 
@@ -23,12 +33,6 @@ export default class CourierMap extends React.Component {
     this.state = {
       apptoken: "",
       user_text: "",
-      region: {
-        latitude: 49.267941,
-        longitude: -123.247360,
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.00200
-      },
       text: "",
       coordinate: new AnimatedRegion({
         latitude: LATITUDE,
@@ -36,27 +40,32 @@ export default class CourierMap extends React.Component {
         latitudeDelta: 0,
         longitudeDelta: 0
       }),
-      position: {
-        latitude: 49.267941,
-        longitude: -123.247360,
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.0200
-      }
+      // position: {
+      //   latitude: 49.267941,
+      //   longitude: -123.247360,
+      //   latitudeDelta: 0.00922,
+      //   longitudeDelta: 0.0200
+      // }
     };
     /* Connect to server socket 
     * join socket io room by order id
     * listen to event 'locationOut', and update Marker position
     */
-    this.socket = SocketIOClient("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:8000");
+    //  if(global.id_ls != -1) {
+    this.socket = SocketIOClient(`${URL}:${WebSocketPORT}`);
     this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
-    this.socket.on("locationOut", (data) => {
-      let location = {
-        latitude: JSON.parse(data.location).lat,
-        longitude: JSON.parse(data.location).lng
-      };
-      //update position on map
-      this.setPosition(location);
-      this.animate(location);
+    this.socket.on("customerLocOut", (data) => {
+      let loc = JSON.parse(data.location);
+      if (loc.orderid != -1 && loc.orderid == global.id_ls) {
+        let location = {
+          latitude: loc.lat,
+          longitude: loc.lng
+        };
+        //update position on map
+        // this.setPosition(location);
+        this.animate(location);
+      }
+
     });
   }
 
@@ -66,53 +75,65 @@ export default class CourierMap extends React.Component {
     interval = setInterval(() => {
       this.getUserlocHandler();
     }, 1000);
+    if (global.id_ls != -1) {
+      this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
+    }
+    this.locate();
   }
 
   /* Clear the interval when component unmount */
   componentWillUnmount() {
     clearInterval(interval);
   }
+  componentWillMount() {
+    this.fetchCurOrder();
+  }
+
+  fetchCurOrder = () => {
+    fetch(`${URL}:${PORT}/order/list_user`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }).then((res) => {
+      res.json().then(result => {
+        // console.log(result.data.list[0].id)
+        global.id_ls = result.data.list[0].id
+        this.forceUpdate();
+      })
+
+    }
+    ).catch((error) => console.log(error));
+  }
 
   /* Get the current user locatio, by calling navigator.geolocation.getCurrentPosition */
   getUserlocHandler = () => {
+    console.log("emiiting id: ", global.id_ls);
     navigator.geolocation.getCurrentPosition((position) => {
-      this.socket.emit("locationIn", JSON.stringify({ lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls }));
+      this.socket.emit("courierLocIn", JSON.stringify({ lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls }));
     }, (err) => console.log(err));
   }
 
   /* locate user position and move to current location */
-  locate = (position) => {
-    this.setState({
-      region: position
-    })
+  locate = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      let location = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
+      this.animateRegion(location);
+    }, (err) => Alert.alert("PLease enable location"));
   }
 
-  /* update the postion on map */
-  setPosition = (position) => {
-    this.setState({
-      position: {
-        latitude: position.latitude,
-        longitude: position.longitude,
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.00200
-      }
-    });
-  }
 
   /* Triggered when the region on map changes, update region state to current region */
   onRegionChange(region) {
     this.setState({ region });
   }
 
-  /* Move Marker with animation */
-  moveMarker() {
-    this.marker._component.animateMarkerToCoordinate({
-      latitude: 60.267941,
-      longitude: -123.247360
-    }, 500);
-  }
-
-  /* Animation */
+  /* Animation for marker*/
   animate(location) {
     const { coordinate } = this.state;
     const newCoordinate = {
@@ -123,30 +144,45 @@ export default class CourierMap extends React.Component {
     coordinate.timing(newCoordinate).start();
   }
 
+  /* Animation for Map region */
+  animateRegion = (location) => {
+    const region = {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.00922,
+      longitudeDelta: 0.0200
+    };
+
+    this.map.animateToRegion(region, 500);
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <MapView
-          provider={this.props.provider}
-          region={this.state.region}
-          showsUserLocation = {true}
-          followsUserLocation = {true}
-          onRegionChangeComplete={this.onRegionChange.bind(this)}
+          ref={(map) => {
+            this.map = map;
+          }}
+          initialRegion={initRegion}
+          showsUserLocation={true}
           style={{ flex: 1 }} >
-          <Marker.Animated
-            ref={(marker) => {
-              this.marker = marker;
-            }}
-            coordinate={this.state.coordinate}
-            image={runicon}
-          />
+          {
+            (global.id_ls != -1) && <Marker.Animated
+              ref={(marker) => {
+                this.marker = marker;
+              }}
+              coordinate={this.state.coordinate}
+            >
+              <Image source={customer} style={{ width: 50, height: 50 }} />
+            </Marker.Animated>
+          }
         </MapView>
-        <Button style={{ position: "absolute", bottom: 10 }}
-          onPress={() => { this.props.navigation.navigate("CourierScreen"); }}
-          title="back to courier screen">
-        </Button>
+        <TouchableOpacity style={styles.backbtn}
+          onPress={() => { this.props.navigation.navigate("OrderList"); }} >
+          <Image source={backicon} style={styles.icon} />
+        </TouchableOpacity>
         <TouchableOpacity style={{ position: "absolute", bottom: 60, right: 20, borderColor: 'black' }}
-          onPress={() => this.locate(this.state.position)} >
+          onPress={() => this.locate()} >
           <Image source={locateicon} style={{ width: 30, height: 30 }} />
         </TouchableOpacity>
         {/* <TouchableOpacity style={{ position: "absolute", bottom: 60, right: 20, borderColor: 'black' }}
@@ -159,10 +195,6 @@ export default class CourierMap extends React.Component {
 
 
 }
-
-CourierMap.propTypes = {
-  provider: ProviderPropType,
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -181,4 +213,13 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     borderStyle: "dotted"
   },
+  icon: {
+    width: 30,
+    height: 30
+  },
+  backbtn: {
+    position: 'absolute',
+    top: 30,
+    left: 10,
+  }
 });

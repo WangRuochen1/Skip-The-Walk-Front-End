@@ -1,291 +1,226 @@
 import React from "react";
-import { StyleSheet, Text, Image, View, Button, TextInput, 
-  PanResponder,TouchableOpacity, TimePickerAndroid, Alert, ToastAndroid } from "react-native";
-import MapView, { AnimatedRegion, Marker, ProviderPropType } from "react-native-maps";
-import SocketIOClient from "socket.io-client";
-import Modal from "react-native-modal";
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import {
+  StyleSheet, Text, Image, View,
+  TouchableOpacity, TimePickerAndroid, Alert, ToastAndroid
+} from "react-native";
+import MapView, { AnimatedRegion, Marker } from "react-native-maps";
+import io from "socket.io-client";
 import { URL, PORT, WebSocketPORT } from '../src/conf'
-import {createStackNavigator,} from 'react-navigation-stack';
+import "../global";
 
-import runicon from "../assets/run.png";
+import courier from "../assets/courier.png";
 import locateicon from "../assets/locate.png";
-
-
-
-import DashboardScreen from "/Users/wangxiaogou/goodProject/screens/dashboard";
-
+import backicon from "../assets/back.png";
+import placeOrdericon from "../assets/plus.png"
 
 /* A random latitude and longitude, required for declaring animated Marker*/
 const LATITUDE = 49.267941;
 const LONGITUDE = -123.247360;
+const initRegion = {
+  latitude: 49.267941,
+  longitude: -123.247360,
+  latitudeDelta: 0.00922,
+  longitudeDelta: 0.0200
+};
 
 export default class CustomerScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
 
-      },
-      onPanResponderMove: (evt, gestureState) => {
-
-      },
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (evt, gestureState) => {
-
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-
-      },
-    });
     this.state = {
       user_text: "",
-      showOderInfo: false,
       region: {
         latitude: 49.267941,
         longitude: -123.247360,
         latitudeDelta: 0.00922,
         longitudeDelta: 0.0200
       },
-      text: "",
       coordinate: new AnimatedRegion({
         latitude: LATITUDE,
         longitude: LONGITUDE,
         latitudeDelta: 0,
         longitudeDelta: 0
       }),
-      position: {
-        latitude: 49.267941,
-        longitude: -123.247360,
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.0200
-      },
       orderTime: {
         hour: -1,
         minute: -1
-      }
+      },
     };
     /* Connect to server socket 
     * join socket io room by order id
     * listen to event 'locationOut', and update Marker position
     */
-    this.socket = SocketIOClient(`${URL}:${WebSocketPORT}`);
-    this.socket.on("locationOut", (data) => {
-      let location = {
-        latitude: JSON.parse(data.location).lat,
-        longitude: JSON.parse(data.location).lng
-      };
-      //update position on map
-      this.setPosition(location);
-      this.animate(location);
-    });
-  }
+    // this.socket = SocketIOClient(`${URL}:${WebSocketPORT}`);
+    this.socket = io(`${URL}:${WebSocketPORT}`);
+    // this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
+    this.socket.on("courierLocOut", (data) => {
+      let loc = JSON.parse(data.location);
+      if (loc.orderid != -1 && loc.orderid == global.id_ls) {
+        let location = {
+          latitude: loc.lat,
+          longitude: loc.lng
+        };
 
-  /* update the postion on map */
-  setPosition = (position) => {
-    this.setState({
-      position: {
-        latitude: position.latitude,
-        longitude: position.longitude,
-        latitudeDelta: 0.00922,
-        longitudeDelta: 0.00200
+        this.animate(location);
       }
-    });
-  }
+      });
+}
 
-  /* locate courier's position and move to current location */
-  locate = (position) => {
-    this.setState({
-      region: position
-    })
-  }
-
-  /* Triggered when the region on map changes, update region state to current region */
-  onRegionChange(region) {
-    this.setState({ region });
-  }
-
-  /* Animation */
-  animate(location) {
-    const { coordinate } = this.state;
-    const newCoordinate = {
-      latitude: location.latitude,
-      longitude: location.longitude
+/* locate courier's position and move to current location */
+locate = () => {
+  navigator.geolocation.getCurrentPosition((position) => {
+    let location = {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
     };
-    coordinate.timing(newCoordinate).start();
-  }
+    this.animateRegion(location);
+  }, (err) => Alert.alert("PLease enable location"));
+  // this.setState({
+  //   region: position
+  // })
+}
 
-  get_order_info = () => {
-    if (this.state.user_text === "") {
-      Alert.alert('Invalid order', 'Please enter order content!');
-      return;
-    }
-    if (this.state.orderTime.hour === -1) {
-      Alert.alert('Invalid order', 'Please enter a time!');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position.coords.latitude)
-      console.log(position.coords.longitude)
-      this.place_order(position.coords.latitude, position.coords.longitude);
-    }, (err) => console.log(err));
-  }
+/* Get the current user locatio, by calling navigator.geolocation.getCurrentPosition */
+getUserlocHandler = () => {
+  navigator.geolocation.getCurrentPosition((position) => {
+    this.socket.emit("customerLocIn", JSON.stringify({ lat: position.coords.latitude, lng: position.coords.longitude, orderid: global.id_ls }));
+  }, (err) => console.log(err));
+}
 
-  /* place a order */
-  place_order = (lat, lng) => {
-    fetch(`${URL}:${WebSocketPORT}/order/place`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        content: this.state.user_text,
-        lat: lat,
-        lng: lng
-      }),
-    }).then(() => {
-      this.setState({ showOderInfo: false });
-      ToastAndroid.showWithGravityAndOffset(
-        'Order Placed!',
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50
-      );
-    })
-  }
+/* Triggered when the region on map changes, update region state to current region */
+onRegionChange(region) {
+  this.setState({ region });
+}
 
-  /* show place order form */
-  toggleModal = () => {
-    this.setState({ showOderInfo: !this.state.showOderInfo });
+/* Animation */
+animate(location) {
+  const { coordinate } = this.state;
+  const newCoordinate = {
+    latitude: location.latitude,
+    longitude: location.longitude
+  };
+  coordinate.timing(newCoordinate).start();
+}
+
+/* Animation for Map region */
+animateRegion = (location) => {
+  const region = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.00922,
+    longitudeDelta: 0.0200
   };
 
-  /* Make sure modal is closed */
-  componentWillUnmount() {
-    this.setState({ showOderInfo: false });
-  }
+  this.map.animateToRegion(region, 500);
+}
 
-  /* Time picker */
-  async pickTime() {
-    try {
-      const { action, hour, minute } = await TimePickerAndroid.open({
-        hour: 14,
-        minute: 0,
-        is24Hour: false, // Will display '2 PM'
-      });
-      if (action !== TimePickerAndroid.dismissedAction) {
-        this.setState({
-          orderTime: {
-            hour: hour,
-            minute: minute
-          }
-        })
-      }
-    } catch ({ code, message }) {
-      console.warn('Cannot open time picker', message);
+/* When component mounts, set up interval to get user location repeatedly */
+componentDidMount() {
+  interval = setInterval(() => {
+    this.getUserlocHandler();
+  }, 1000);
+
+  if (global.id_ls != -1) {
+    this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
+  }
+  this.locate();
+}
+
+/* Fetch order and check if user is in an order when entered */
+componentWillMount() {
+  this.fetchCurOrder();
+}
+
+/* Clear the interval when component unmount */
+componentWillUnmount() {
+  clearInterval(interval);
+}
+
+
+fetchCurOrder = () => {
+  fetch(`${URL}:${PORT}/order/list_user`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  }).then((res) => {
+    res.json().then(result => {
+      global.id_ls = result.data.list[0].id
+      this.forceUpdate();
+    })
+
+  }
+  ).catch((error) => console.log(error));
+}
+
+
+/* Time picker */
+async pickTime() {
+  try {
+    const { action, hour, minute } = await TimePickerAndroid.open({
+      hour: 14,
+      minute: 0,
+      is24Hour: false, // Will display '2 PM'
+    });
+    if (action !== TimePickerAndroid.dismissedAction) {
+      this.setState({
+        orderTime: {
+          hour: hour,
+          minute: minute
+        }
+      })
     }
+  } catch ({ code, message }) {
+    console.warn('Cannot open time picker', message);
   }
+}
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <MapView
-          provider={this.props.provider}
-          region={this.state.region}
-          onRegionChangeComplete={this.onRegionChange.bind(this)}
-          style={{ flex: 1 }} >
-          <Marker.Animated
+render() {
+  // let handles = this.state.panResponder.panHandlers;
+  return (
+    <View style={styles.container}>
+      <MapView
+        ref={(map) => {
+          this.map = map;
+        }}
+        initialRegion={initRegion}
+        showsUserLocation={true}
+        style={{ flex: 1 }} >
+        {
+          (global.id_ls != -1) && <Marker.Animated
             ref={(marker) => {
               this.marker = marker;
             }}
             coordinate={this.state.coordinate}
-            image={runicon}
-          />
-        </MapView>
-        {/* TODO: Movavle view, try put it under the map.... */}
-        <View style={styles.calloutView} {...this._panResponder.panHandlers} />
+          >
+            <Image source={courier} style={{ width: 50, height: 50 }} />
+          </Marker.Animated>
+        }
+      </MapView>
 
-        {/* TODO: AUTOcomplete google search, put it some where.... */}
-        {/* <GooglePlacesAutocomplete
-          placeholder='Enter Location'
-          minLength={2}
-          autoFocus={false}
-          returnKeyType={'default'}
-          fetchDetails={true}
-          styles={{
-            textInputContainer: {
-              position:'absolute',
-              top: 20,
-              backgroundColor: 'rgba(0,0,0,0)',
-              borderTopWidth: 0,
-              borderBottomWidth: 0
-            },
-            textInput: {
-              position: 'absolute',
-              top: 30,
-              marginLeft: 0,
-              marginRight: 0,
-              height: 38,
-              color: '#5d5d5d',
-              fontSize: 16
-            },
-            predefinedPlacesDescription: {
-              position: 'absolute',
-              top: 40,
-              color: '#1faadb'
-            },
-          }}
-          currentLocation={false}
-        /> */}
-        <View style={{ position: "absolute", top: 50, height: 60, marginVertical: 20 }}>
-          <Button
-            onPress={() => { this.props.navigation.navigate("DashboardScreen"); }}
-            title="back"
-            color="green">
-          </Button>
-        </View>
-        <View style={{ position: "absolute", top: 100, height: 100, marginVertical: 20 }}>
-          <Button
-            onPress={this.toggleModal}
-            title="Place Order"
-            color="#ff9900">
-          </Button>
-        </View>
+      <TouchableOpacity style={styles.backbtn}
+        onPress={() => { this.props.navigation.navigate("OrderScreen"); }} >
+        <Image source={backicon} style={styles.icon} />
+      </TouchableOpacity>
 
-        <Modal isVisible={this.state.showOderInfo}>
-          <View style={{ position: "absolute", bottom: 200, alignSelf: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold", color: 'white', marginVertical: 20 }}>Enter Order Information</Text>
-            <TextInput
-              placeholder="Order Information"
-              underlineColorAndroid={"transparent"}
-              onChangeText={(user_text) => this.setState({ user_text })}
-              style={{ marginVertical: 20 }} />
-            <Button title="Cancel" onPress={this.toggleModal} />
-            <Button title="Pick a time"
-              onPress={this.pickTime.bind(this)} />
-            <Button title="Place!"
-              onPress={this.get_order_info.bind(this)} />
-          </View>
-        </Modal>
-        <TouchableOpacity style={{ position: "absolute", bottom: 80, right: 20, borderColor: 'black' }}
-          onPress={() => this.locate(this.state.position)} >
-          <Image source={locateicon} style={{ width: 30, height: 30 }} />
-        </TouchableOpacity>
-      </View>
-    );
-  }
+      <TouchableOpacity style={styles.placebtn}
+        onPress={() => { this.props.navigation.navigate("OrderScreen"); }} >
+        <Image source={placeOrdericon} style={styles.largeicon} />
+      </TouchableOpacity>
 
-
+      <TouchableOpacity style={{ position: "absolute", bottom: 40, right: 20, borderColor: 'black' }}
+        onPress={() => this.locate()} >
+        <Image source={locateicon} style={styles.icon} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 
-
-CustomerScreen.propTypes = {
-  provider: ProviderPropType,
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -294,32 +229,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 0,
   },
-  btn: {
-    borderWidth: 1,
-    borderRadius: 3,
-    margin: 10,
-    padding: 10,
-    borderColor: "black",
-    backgroundColor: "yellow",
-    borderStyle: "dotted"
+  icon: {
+    width: 30,
+    height: 30
   },
-  calloutView: {
+  backbtn: {
     position: 'absolute',
-    top: 20,
-    flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 10,
-    width: "40%",
-    marginLeft: "30%",
-    marginRight: "30%",
-    marginTop: 20
+    top: 30,
+    left: 10,
   },
-  calloutSearch: {
-    borderColor: "transparent",
-    marginLeft: 10,
-    width: "90%",
-    marginRight: 10,
-    height: 40,
-    borderWidth: 0.0
+  largeicon: {
+    width: 50,
+    height: 50
   },
+  placebtn: {
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
+  }
 });

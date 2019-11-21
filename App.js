@@ -1,35 +1,25 @@
 import React from 'react';
 import { Button, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {  createAppContainer } from 'react-navigation';
-import {createStackNavigator,} from 'react-navigation-stack';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+// import {createStackNavigator,} from 'react-navigation-stack';
 import {createBottomTabNavigator,} from 'react-navigation-tabs';
 
+//import DashboardScreen from "./screens/dashboard";
+//import  {DashBoardStack } from "./screens/dashboard";
+//import CourierScreen from "./screens/courierscreen";
 import OpenPage from "./screens/OpenPage";
-import LoginScreen from "./screens/login_screen";
-import DashboardScreen from "./screens/dashboard";
 import CustomerScreen from "./screens/customerscreen";
-import CourierScreen from "./screens/courierscreen";
 import CourierMap from "./screens/couriermap";
 import OrderList from "./screens/OrderList";
 import Setting from "./screens/setting";
-//  import DashboardStack from "./screens/dashboard";
-//  import CustomerStack from "./screens/customerscreen";
-
-
-// const  DashboardStack= createStackNavigator({
-//   LoginScreen: { screen: LoginScreen },
-//   CourierScreen: { screen: CourierScreen },
-//   CustomerScreen: { screen: CustomerScreen },
-// });
-
-// const CustomerStack = createStackNavigator({
-//   DashboardScreen: { screen: DashboardScreen },
-// });
-// const SettingsStack = createStackNavigator({
-//   SettingsScreen: { screen: SettingsScreen },
-//   DetailsScreen: { screen: DetailsScreen },
-// });
+import OrderScreen from "./screens/PlaceorderPage";
+import AddressScreen from "./screens/address";
+import {CourierMapStack} from "./screens/couriermap";
+import {CustomerStack} from "./screens/customerscreen";
+import {PlaceOrderStack} from "./screens/PlaceorderPage";
+import {courierStack} from "./src/utils/navigators";
+import {customerStack} from "./src/utils/navigators";
 
 export default class App extends React.Component {
   render() {
@@ -37,39 +27,16 @@ export default class App extends React.Component {
   }
 }
 
+
 const APPNavigator = createAppContainer(
-  createBottomTabNavigator(
-    {
+  createSwitchNavigator({
       OpenPage: {screen: OpenPage},
-      Setting:  {screen: Setting},
-      OrderList: {screen: OrderList},
-      DashboardScreen: { screen: DashboardScreen },
-      CustomerScreen: { screen: CustomerScreen},
-      CourierScreen: {screen: CourierScreen},
-      CourierMap: {screen: CourierMap},
-      
-    },
-    // {
-    //   defaultNavigationOptions: ({ navigation }) => ({
-    //     tabBarIcon: ({ focused, tintColor }) => {
-    //       const { routeName } = navigation.state;
-    //       let iconName;
-    //       if (routeName === 'Dashboard') {
-    //         iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-    //       } else if (routeName === 'Customer') {
-    //         iconName = `ios-options${focused ? '' : '-outline'}`;
-    //       }
-  
-    //       // You can return any component that you like here! We usually use an
-    //       // icon component from react-native-vector-icons
-    //       return <Ionicons name={iconName} size={25} color={tintColor} />;
-    //     },
-    //   }),
-    //   tabBarOptions: {
-    //     activeTintColor: 'tomato',
-    //     inactiveTintColor: 'gray',
-    //   },
-    // }
-  )
-);
+      courierStack: courierStack,
+      customerStack: customerStack,
+  })
+)
+
+
+
+
 
