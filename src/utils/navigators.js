@@ -68,7 +68,6 @@ export const courierStack = createStackNavigator({
   CourierMap: CourierMap,
   //setting: Setting,
  
-<<<<<<< HEAD
 },
 {
   headerMode: 'none',
@@ -76,9 +75,6 @@ export const courierStack = createStackNavigator({
     headerVisible: false,
   }
  })
-=======
-})
->>>>>>> 464055ba7fe8ff220c751c1df044e9bd9c5722b5
 
 export const customerStack = createStackNavigator({
   CustomerTabs: CustomerTabs,
