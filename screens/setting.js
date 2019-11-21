@@ -3,7 +3,7 @@ import {StyleSheet,View,Image,Text,TouchableOpacity,ImageBackground,Button,TextI
   PixelRatio} from 'react-native'; 
 import "../global";
 import Modal from "react-native-modal";
-import { URL, PORT} from '../src/conf'
+import { URL, PORT} from "../src/conf";
 
 import self from "../assets/self.png";
 import userMode from "../assets/usermode.png";

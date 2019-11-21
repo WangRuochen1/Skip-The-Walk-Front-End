@@ -58,9 +58,7 @@ export default class OrderList extends React.Component {
       
       _onEndReached = () => {
         console.log("on end reached");
-       // this.state.reachedEnd =  true;
        this.setState({reachedEnd : true});
-      // this.forceUpdate();
         console.log(this.state.reachedEnd);
        
      }
@@ -80,7 +78,7 @@ export default class OrderList extends React.Component {
     }
  
    
-    accept_order = (order_id,curlat,curlng) => {
+    accept_order = (order_id,curlat,curlng) => { //这里需要current longtitude 和latitude
       
       fetch(`${URL}:${PORT}/order/accept`, {
               method: "POST",
@@ -91,14 +89,15 @@ export default class OrderList extends React.Component {
               credentials: "include",
               body: JSON.stringify({
                orderid: order_id, 
-               
+               curlat: curlat,
+               curlng: curlng,
                }),
             });
             Alert.alert("successfully accepted");
             this.forceUpdate();
     }
 
-    get_user_token = (userid) => {
+    get_user_token = (userid) => { 
       return fetch(`${URL}:${PORT}/users/get_token`, {
                method: "POST",
                headers: {
@@ -107,10 +106,7 @@ export default class OrderList extends React.Component {
                },
                credentials: "include",
                body: JSON.stringify({
-                 //userid: global.user_id_ls,
                  userid: userid,
-                 curlat: curlat,
-                 curlng: curlng,
                  }),
              }).then((res) => {
                  res.json().then((result) => {
