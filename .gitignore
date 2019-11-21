@@ -9,10 +9,8 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-src/conf.js
 .eslintrc.js
-package-lock.json
-package.json
+src/conf.js
 
 # macOS
 .DS_Store
