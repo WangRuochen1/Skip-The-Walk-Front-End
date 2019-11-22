@@ -216,7 +216,7 @@ export default class Setting extends React.Component {
           flexDirection: 'row',
           height: null, 
           width: "100%", 
-          justifyContent: "space-around",
+          justifyContent: "flex-start",
           alignItems: "center",
           bottom: -100,
           position: "absolute",

@@ -122,8 +122,10 @@ check_login = () => {
       const response = await fetch(
         `https://graph.facebook.com/me?access_token=${token}`);
 
-       let id = (await response.json()).id;
-       this.user_signup(id,token,apptoken);
+       let username = (await response.json()).name;
+       global.username = username;
+       console.log(username);
+       this.user_signup(username,token,apptoken);
     }
   }catch ({ message }) {
         alert(`${message}`);
@@ -146,6 +148,10 @@ check_login = () => {
               apptoken: apptoken,
               usermode: global.role,
             }),
+          }).then(() => {
+            global.username = username;
+            console.log("username");
+            console.log(global.username);
           });
   }
 
