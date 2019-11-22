@@ -73,6 +73,7 @@ check_login = () => {
               if(result.errno == -1){
                 alert(`Please Choose Your Role and Sign In with Facebook`);
              }else{
+               console.log(result.data.usermode);
                 if(result.data.usermode == "courier"){
                     global.role = "courier";
                     this.props.navigation.navigate("OrderList");

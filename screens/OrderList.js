@@ -78,7 +78,7 @@ export default class OrderList extends React.Component {
     }
  
    
-    accept_order = (order_id,curlat,curlng) => { //这里需要current longtitude 和latitude
+    accept_order = (order_id) => { //这里需要current longtitude 和latitude
       
       fetch(`${URL}:${PORT}/order/accept`, {
               method: "POST",
@@ -89,8 +89,6 @@ export default class OrderList extends React.Component {
               credentials: "include",
               body: JSON.stringify({
                orderid: order_id, 
-               curlat: curlat,
-               curlng: curlng,
                }),
             });
             Alert.alert("successfully accepted");
@@ -155,7 +153,7 @@ export default class OrderList extends React.Component {
       <View>
         {item.status === 1?<Text style = {styles.text}>content={item.content} | placed</Text>:<Text style = {styles.text}>content={item.content} | accepted</Text>}
         <View style = {styles.btn}>
-        <Button title =  {`order ${item.id} accept above order`} onPress = {()=>this.accept_order(item.id,item.curlat,item.curlng)}></Button>
+        <Button title =  {`order ${item.id} accept above order`} onPress = {()=>this.accept_order(item.id)}></Button>
         </View>  
         <View style = {styles.btn}>
         <Button title =  {"Finish this order"} onPress = {()=>this.finish_order(item.id,item.userid)}></Button>

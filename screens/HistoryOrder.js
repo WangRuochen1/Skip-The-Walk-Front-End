@@ -15,7 +15,7 @@ export default class OrderScreen extends React.Component{
 
 get_history_order = () => {
         
-    fetch(`${URL}:${PORT}/order_history`, {  //这个路由？？？？？
+    fetch(`${URL}:${PORT}/order/order_history`, { 
             method: "GET",
             headers: {
               Accept: "application/json",
@@ -35,5 +35,7 @@ get_history_order = () => {
           ).catch((error) => console.log(error));
 
     }
+
+    
 
 }

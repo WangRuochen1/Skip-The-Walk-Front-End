@@ -30,6 +30,8 @@ export default class AddressScreen extends React.Component {
     const fromLng = this.props.navigation.getParam('fromLng', 0);
     const toLat = this.props.navigation.getParam('toLat', 0);
     const toLng = this.props.navigation.getParam('toLng', 0);
+    const content = this.props.navigation.getParam('content', 'Please enter any additional information here ...');
+    const orderTime = this.props.navigation.getParam('orderTime', { hour: 0, minute: 0 });
     return (
       <View style={styles.container}>
         <TopBar onBackPress={() => {
@@ -40,7 +42,9 @@ export default class AddressScreen extends React.Component {
 
             locTo: locTo,
             toLat: toLat,
-            toLng: toLng
+            toLng: toLng,
+            content: content,
+            orderTime: orderTime
           });
         }}
         source={confirmIcon}
@@ -52,7 +56,9 @@ export default class AddressScreen extends React.Component {
 
             locTo: (selection === 'to') ? this.state.user_text : locTo,
             toLat: (selection === 'to') ? this.state.lat : toLat,
-            toLng: (selection === 'to') ? this.state.lng : toLng
+            toLng: (selection === 'to') ? this.state.lng : toLng,
+            content: content,
+            orderTime: orderTime
           });
         }}
         >
@@ -75,7 +81,7 @@ export default class AddressScreen extends React.Component {
             }}
             isRowScrollable={true}
             textInputProps={{
-              onChangeText: (user_text) => this.setState({ user_text })
+              onChangeText: (user_text) => this.setState({ user_text }),
             }}
             query={{
               // available options: https://developers.google.com/places/web-service/autocomplete

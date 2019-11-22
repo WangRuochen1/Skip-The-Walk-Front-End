@@ -20,6 +20,9 @@ import {CustomerStack} from "./screens/customerscreen";
 import {PlaceOrderStack} from "./screens/PlaceorderPage";
 import {courierStack} from "./src/utils/navigators";
 import {customerStack} from "./src/utils/navigators";
+import LoginScreen from "./screens/LoginScreen";
+import SignupScreen from "./screens/SignupScreen";
+import phonemodeScreen from "./screens/phonemodeScreen";
 
 export default class App extends React.Component {
   render() {
@@ -31,6 +34,9 @@ export default class App extends React.Component {
 const APPNavigator = createAppContainer(
   createSwitchNavigator({
       OpenPage: {screen: OpenPage},
+      // LoginScreen:{screen:LoginScreen},
+      // SignupScreen: {screen: SignupScreen},
+      // phonemodeScreen: {screen: phonemodeScreen},
       courierStack: courierStack,
       customerStack: customerStack,
   })

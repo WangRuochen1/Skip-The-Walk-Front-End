@@ -17,3 +17,4 @@ global.phoneNum = "Please enter";
 global.locFrom  = -1;
 global.locTo    = -1;
 global.time     = -1;
+global.change_screen = 0;
