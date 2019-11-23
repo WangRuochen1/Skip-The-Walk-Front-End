@@ -21,84 +21,12 @@ import dotpic from "../assets/dot.png";
 import righticon from "../assets/arrow_right.png";
 
 export default class OrderList extends React.Component {
-<<<<<<< HEAD
-   
-     state = { 
-       refreshing: false,
-       myArray: [],
-     }
-     
-      componentDidMount() {
-        this.list_order();
-      }
-
-    /* This function list_order is triggered by button of each order.
-    Every small order is a button, when pressed, it will give us the 
-    detailed information. This function help us to get all the information
-    from back end database
-    */
-     
-    list_order = () => {
-        
-        fetch(`${URL}:${PORT}/order/list`, {
-                method: "GET",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              }).then((res) => {
-                  res.json().then(result =>{
-                    console.log(result);
-                    for(j = 0; j < result.data.list.length; j++){
-                      var joined = this.state.myArray.concat(result.data.list[j]);
-                      this.setState({ myArray: joined });
-                    }
-                  })
-              } 
-              ).catch((error) => console.log(error));
-  
-        }
-
-
-     onClearArray = () => {
-           this.setState({ myArray: [] });
-        };
-
-      onRefresh = () => {
-        this.setState({refreshing: true});
-        this.onClearArray();
-        this.list_order();
-        this.setState({refreshing: false});
-      }
-      
-      _onEndReached = () => {
-        console.log("on end reached");
-       this.setState({reachedEnd : true});
-        console.log(this.state.reachedEnd);
-       
-     }
-
-     renderButtons = () => {
-      const buttons = [];
-      for( let i = 0; i < global.ls_length; i++) { 
-         buttons.push(
-         <Button
-         onPress={() => {this.list_order(i);}}
-         title = {`order ${i}`}
-         key = {i}
-         ></Button>
-        );
-      }
-      return buttons;
-=======
   state = {
     refreshing: false,
     myArray: [],
     location: {
       latitude: -1,
       longitude: -1
->>>>>>> 22d151e90b1cb5763b174680f609377ed140dedc
     }
   };
 

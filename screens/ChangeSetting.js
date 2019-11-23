@@ -92,11 +92,7 @@ export default class ChangeSetting extends React.Component {
         <View style = {Platform.OS === "ios" ? styles.container2 : styles.container3}>
             <Picker
                 selectedValue={this.state.user_mode}
-<<<<<<< HEAD
-                style={{height: 100, width: 200}}
-=======
                 style={{height: Platform.OS === "ios" ? 0 : 150, width: 300}}
->>>>>>> 22d151e90b1cb5763b174680f609377ed140dedc
                 onValueChange={(itemValue, itemIndex) =>
                 this.setState({user_mode: itemValue})
             }>
