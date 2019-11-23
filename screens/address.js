@@ -86,8 +86,15 @@ export default class AddressScreen extends React.Component {
             query={{
               // available options: https://developers.google.com/places/web-service/autocomplete
               key: APIKEY,
-              language: 'en' // language of the results
+              language: 'en', // language of the results
               // types: '(cities)' // default: 'geocode'
+            }}
+            nearbyPlacesAPI = 'GooglePlacesSearch'
+            GooglePlacesSearchQuery = {{
+              //rankby: 'distance',
+              key: APIKEY,
+              radius: 5000,
+              location: {lat:49.267941,lng:-123.247360}
             }}
             currentLocation={true}
             currentLocationLabel="Current location"

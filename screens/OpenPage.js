@@ -84,9 +84,6 @@ check_login = () => {
              }
              global.username = result.data.username;
              global.phoneNum = result.data.phonenum;
-             console.log("result");
-             console.log(result.data.username);
-             console.log(global.username);
             });
             
           } 
