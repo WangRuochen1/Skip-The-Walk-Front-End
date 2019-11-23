@@ -1,10 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image } from "react-native";
 import Expo from "expo";
 import * as Facebook from "expo-facebook";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 import "../global";
+
+import logo from "../assets/logo.png";
+import fbicon from "../assets/facebook.png";
+
 export default class LoginScreen extends React.Component {
     componentDidMount() {
         this.check_login();
@@ -19,9 +23,40 @@ export default class LoginScreen extends React.Component {
     handlePassword = (text) => {
         this.setState({passward: text});
     }
+   
+    //to verify password and navigate to courier/customer screen
+    login = (username, password) => {
+        if(username == '' || password == ''){
+            alert('Please enter User Name and Password');
+        }else{
+        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            }),
+            }).then((response) => {
+                response.json().then((result) => {
+                  if(result.errno == -1){
+                    alert(`Please enter the correct username and password`);
+                 }else{
+                    if(result.data.usermode == "courier"){
+                        this.props.navigation.navigate("OrderList");
+                        }else if(result.data.usermode == "customer"){
+                        this.props.navigation.navigate("CustomerScreen");
+                        }
+                 }
+                });
+                
+              } 
+              ).catch((error) => console.log(error));
+            }
 
-    login = (username, password, usermode) => {
-        //How to verigy passwod and navigate to courier/customer screen
     }
     toSignUp = () => {
         this.props.navigation.navigate("SignupScreen");
@@ -38,7 +73,7 @@ export default class LoginScreen extends React.Component {
               }).then((response) => {
                 response.json().then((result) => {
                   if(result.errno == -1){
-                    alert(`Please Log in or Sign Up`);
+                    //alert(`Please Log in or Sign Up`);
                  }else{
                     if(result.data.usermode == "courier"){
                         this.props.navigation.navigate("OrderList");
@@ -51,6 +86,7 @@ export default class LoginScreen extends React.Component {
               } 
               ).catch((error) => console.log(error));
       }
+
 
     async loginWithFb(){
         try {
@@ -76,8 +112,13 @@ export default class LoginScreen extends React.Component {
           const response = await fetch(
             `https://graph.facebook.com/me?access_token=${token}`);
     
-           let username = (await response.json()).name;
-           this.user_fbsignup(username,token,apptoken);
+           let id = (await response.json()).id;
+           //this.user_fbsignup(id,token,apptoken);
+           this.props.navigation.navigate("phonemodeScreen", {
+               username: id,
+               apptoken: apptoken,
+               fbtoken: token
+           });
         }
       }catch ({ message }) {
             alert(`${message}`);
@@ -85,43 +126,43 @@ export default class LoginScreen extends React.Component {
       
        }
     
-    
-    user_fbsignup = (username, fbtoken,apptoken) => {
-    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                username: username,
-                fbtoken: fbtoken,
-                apptoken: apptoken,
-                usermode: global.role
-            }),
-            }).then(() => {
-                global.username = username;
-                console.log("username");
-                console.log(global.username);
-              });
-    }
+    // fbsignupComb = () => {
+    //     this.loginWithFb();
+    //     this.props.navigation.navigate("phonemodeScreen");
+    // }
+    // user_fbsignup = (username, fbtoken,apptoken) => {
+    // fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+    //         method: "POST",
+    //         headers: {
+    //             Accept: "application/json",
+    //             "Content-Type": "application/json",
+    //         },
+    //         credentials: "include",
+    //         body: JSON.stringify({
+    //             username: username,
+    //             fbtoken: fbtoken,
+    //             apptoken: apptoken,
+    //             usermode: global.role
+    //         }),
+    //         });
+    // }
 
 
 
     render() {
         return (
             <View style = {styles.container}>
+            <Image source={logo} style={styles.icon} />
                 <TextInput style = {styles.input}
                     underlineColorAndroid = "transparent"
-                    placeholder = "User Name"
+                    placeholder = "  User Name"
                     placeholderTextColor = "#9a73ef"
                     autoCapitalize = "none"
                     onChangeText = {this.handelUserName}/>
                 
-                <TextInput style = {styles.input}
+                <TextInput secureTextEntry={true} style = {styles.input}
                     underlineColorAndroid = "transparent"
-                    placeholder = "Password"
+                    placeholder = "  Password"
                     placeholderTextColor = "#9a73ef"
                     autoCapitalize = "none"
                     onChangeText = {this.handlePassword}/>
@@ -132,7 +173,7 @@ export default class LoginScreen extends React.Component {
                 <TouchableOpacity
                     style = {styles.submitButton}
                     onPress = {
-                    () => this.login(this.state.username, this.state.password, this.state.username)
+                    () => this.login(this.state.username, this.state.password)
                     }>
                     <Text style = {styles.submitButtonText}> Log In </Text>
                 </TouchableOpacity>
@@ -143,13 +184,13 @@ export default class LoginScreen extends React.Component {
                     }>
                     <Text style = {styles.submitButtonText}> Sign Up </Text>
                 </TouchableOpacity>
-
+                <Text style = {styles.option}>or login with</Text>
                 <TouchableOpacity
-                    style = {styles.fbloginButton}
+                    style = {styles.fbButtom}
                     onPress = {
                     () => this.loginWithFb()
                     }>
-                    <Text style = {styles.submitButtonText}> Login With Facebook </Text>
+                    <Image source={fbicon} style={styles.fbicon}/>
                 </TouchableOpacity>
             </View>
         )
@@ -159,7 +200,7 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 23
+        paddingTop: 100
     },
     input: {
         margin: 15,
@@ -172,8 +213,30 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 15,
         height: 40,
+        borderRadius: 20
      },
      submitButtonText:{
-        color: 'white'
-     }
+        color: 'white',
+        textAlign: 'center',
+     },
+     icon: {
+        width: 100,
+        height: 100,
+        left: 140,
+        marginBottom: 50
+    },
+    option:{
+        color: 'grey',
+        textAlign: 'center'
+    },
+    fbicon: {
+        width: 49,
+        height: 50,
+    },
+    fbButtom: {
+        marginTop: 10,
+        marginLeft: 160,
+        width: 90,
+        height: 70,
+    }
 })

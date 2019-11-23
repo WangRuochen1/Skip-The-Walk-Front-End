@@ -1,15 +1,21 @@
 import React from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput,Picker } from "react-native";
+import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput,Picker, Image } from "react-native";
 import * as Facebook from "expo-facebook";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
+import fbicon from "../assets/facebook.png";
+import courier from "../assets/runningman.png";
+import customer from "../assets/standperson.png";
+
 export default class SignupScreen extends React.Component {
-    state = {
-        username: '',
-        passward: '',
-        phonenum: '',
-        usermode: '',
-    }
+
+        state = {
+            username: '',
+            passward: '',
+            phonenum: '',
+            usermode: 'Courier',
+        };
+
     handelUserName = (text) => {
         this.setState({username: text});
     }
@@ -23,8 +29,15 @@ export default class SignupScreen extends React.Component {
         this.setState({usermode: text});
     }
 
+    async userSignupComb (username, password, phonenum, usermode)  {
+        let apptoken = await Notifications.getExpoPushTokenAsync();
+        this.user_signup(username, password, phonenum, usermode, apptoken);
+    }
 
-    user_signup = (username, password, phonenum, usermode) => {
+    user_signup = (username, password, phonenum, usermode, apptoken) => {
+        if(username == '' || password == '' || phonenum == ''){
+            alert('Please make you you have enter all fields')
+        } else{
         fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
             method: "POST",
             headers: {
@@ -37,24 +50,33 @@ export default class SignupScreen extends React.Component {
                 password: password,
                 phonenum: phonenum,
                 usermode: usermode,
+                fbtoken: -1,
+                apptoken: apptoken,
             }),
-    });
-
-        if(usermode == 'courier'){
-            this.props.navigation.navigate("CourierScreen");
-            ///////////////set globel usermode
-        } else {
-            this.props.navigation.navigate("CustomerScreen");
-            ///////////////set globel usermode
+        }).then((response) => {
+            response.json().then((result) => {
+                if(result.errno == -1){
+                    alert(`Please choose a new username, this one is used by others`);
+                }else{
+                    if(usermode == 'courier'){
+                    global.role = 'courier';
+                    this.props.navigation.navigate("CourierScreen");
+                    } else {
+                    global.role = 'customer';
+                    this.props.navigation.navigate("CustomerScreen");
+                    }
+                }
+            }
+        )}) 
         }
     }
 
 
 
-    fbsignupComb = () => {
-        this.loginWithFb();
-        this.props.navigation.navigate("phonemodeScreen");
-    }
+    // fbsignupComb = () => {
+    //     this.loginWithFb();
+    //     this.props.navigation.navigate("phonemodeScreen");
+    // }
     async loginWithFb(){
         try {
         //face book login    
@@ -80,7 +102,12 @@ export default class SignupScreen extends React.Component {
             `https://graph.facebook.com/me?access_token=${token}`);
     
            let id = (await response.json()).id;
-           this.user_fbsignup(id,token,apptoken);
+           //this.user_fbsignup(id,token,apptoken);
+           this.props.navigation.navigate("phonemodeScreen", {
+            username: id,
+            apptoken: apptoken,
+            fbtoken: token
+        });
         }
       }catch ({ message }) {
             alert(`${message}`);
@@ -88,64 +115,74 @@ export default class SignupScreen extends React.Component {
     }
     
     
-    user_fbsignup = (username, fbtoken,apptoken) => {
-    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                username: username,
-                fbtoken: fbtoken,
-                apptoken: apptoken,
-                usermode: global.role
-            }),
-            });
-    }
-
+    // user_fbsignup = (username, fbtoken,apptoken) => {
+    // fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+    //         method: "POST",
+    //         headers: {
+    //             Accept: "application/json",
+    //             "Content-Type": "application/json",
+    //         },
+    //         credentials: "include",
+    //         body: JSON.stringify({
+    //             username: username,
+    //             fbtoken: fbtoken,
+    //             apptoken: apptoken,
+    //         }),
+    //         });
+    // }
+    
 
 
     render() {
         return (
             <View style = {styles.container}>
+                <Picker selectedValue = {this.state.usermode} onValueChange = {this.handelUsermode}>
+                    <Picker.Item label = "Courier" value = 'courier' />
+                    <Picker.Item label = "Customer" value = 'customer' />
+                </Picker>
+                <Text style={styles.mode}>I want to be a {this.state.usermode}</Text>
+
                 <TextInput style = {styles.input}
                     underlineColorAndroid = "transparent"
-                    placeholder = "User Name"
+                    placeholder = " User Name"
                     placeholderTextColor = "#9a73ef"
                     autoCapitalize = "none"
                     onChangeText = {this.handelUserName}/>
                 
-                <TextInput style = {styles.input}
+                <TextInput secureTextEntry={true} style = {styles.input}
                     underlineColorAndroid = "transparent"
-                    placeholder = "Password"
+                    placeholder = " Password"
                     placeholderTextColor = "#9a73ef"
                     autoCapitalize = "none"
                     onChangeText = {this.handlePassword}/>
-                
-                <Picker selectedValue = {this.state.usermode} onValueChange = {this.handelUsermode}>
-                    <Picker.Item label = "Courier" value = 'courier' />
-                    <Picker.Item label = "Customer" value = "customer" />
-                </Picker>
-                <Text style = {styles.text}>{this.state.usermode}</Text>
+
+                <TextInput style = {styles.input}
+                    underlineColorAndroid = "transparent"
+                    placeholder = " Phone Number"
+                    placeholderTextColor = "#9a73ef"
+                    autoCapitalize = "none"
+                    onChangeText = {this.handelPhonenum}/>
+
+
 
                 <TouchableOpacity
                     style = {styles.submitButton}
                     onPress = {
-                    () => this.user_signup(this.state.username, this.state.password, this.state.phonenum, this.state.username)
+                    () => this.userSignupComb(this.state.username, this.state.password, this.state.phonenum, this.state.username)
                     }>
                     <Text style = {styles.submitButtonText}> Sign Up </Text>
                 </TouchableOpacity>
 
+                <Text style = {styles.option}>or login with</Text>
                 <TouchableOpacity
-                    style = {styles.fbloginButton}
+                    style = {styles.fbButtom}
                     onPress = {
                     () => this.loginWithFb()
                     }>
-                    <Text style = {styles.submitButtonText}> Login With Facebook </Text>
+                    <Image source={fbicon} style={styles.fbicon}/>
                 </TouchableOpacity>
             </View>
+
         )
     }
 }
@@ -167,8 +204,29 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 15,
         height: 40,
+        borderRadius: 20
      },
      submitButtonText:{
-        color: 'white'
-     }
+        color: 'white',
+        textAlign: 'center'
+     },
+     fbicon: {
+        width: 49,
+        height: 50,
+    },
+    fbButtom: {
+        marginTop: 10,
+        marginLeft: 160,
+        width: 90,
+        height: 70,
+    },
+    option:{
+        color: 'grey',
+        textAlign: 'center'
+    },
+    mode:{
+        fontSize:20,
+        textAlign: 'center',
+        marginTop: -20
+    }
 })
