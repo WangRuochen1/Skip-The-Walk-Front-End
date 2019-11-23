@@ -25,7 +25,11 @@ import cart from "../assets/cart_empty.png";
 export default class CustomerList extends React.Component {
   state = {
     refreshing: false,
-    myArray: []
+    myArray: [],
+    location: {
+        latitude: -1,
+        longitude: -1
+      }
   };
 
   componentDidMount() {
@@ -43,6 +47,12 @@ export default class CustomerList extends React.Component {
   */
 
   list_order = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+        let location = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+
     fetch(`${URL}:${PORT}/order/list_customer`, {
       method: "GET",
       headers: {
@@ -53,15 +63,13 @@ export default class CustomerList extends React.Component {
     })
       .then(res => {
         res.json().then(result => {
-          console.log(result);
           for (j = 0; j < result.data.list.length; j++) {
             var joined = this.state.myArray.concat(result.data.list[j]);
             this.setState({ myArray: joined });
           }
-          console.log(this.state.myArray);
         });
-      })
-      .catch(error => console.log(error));
+      }).catch(error => console.log(error));
+    })
   };
 
   onClearArray = () => {
@@ -76,11 +84,9 @@ export default class CustomerList extends React.Component {
   };
 
   _onEndReached = () => {
-    console.log("on end reached");
     // this.state.reachedEnd =  true;
     this.setState({ reachedEnd: true });
     // this.forceUpdate();
-    console.log(this.state.reachedEnd);
   };
 
   renderButtons = () => {
@@ -112,6 +118,8 @@ export default class CustomerList extends React.Component {
     locTo = {item.locTo}
     status = {item.status}
     righticon = {righticon}
+    id={item.id}
+    detail={item.content}
     />
   );
 
@@ -124,7 +132,6 @@ export default class CustomerList extends React.Component {
           source = {cart}>My Order</TopBar>
         </View>
         <FlatList
-         // style={{ marginTop: 100 }}
           data={this.state.myArray}
           extraData={this.state}
           onRefresh={() => this.onRefresh()}

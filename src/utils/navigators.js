@@ -32,7 +32,6 @@ export const CourierMapStack = createStackNavigator({
     CustomerScreen :CustomerScreen,
     OrderScreen: OrderScreen,
     AddressScreen: AddressScreen,
-    CustomerList: CustomerList, //不一定对
   },{
     headerMode: 'none',
     navigationOptions: {
