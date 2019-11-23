@@ -41,20 +41,29 @@ export default class ChangeSetting extends React.Component {
              usermode: this.state.user_mode,
              phonenum: this.state.user_text_phone, 
              }),
+          }).then((response) => {
+            console.log(response);
+            response.json().then((result)=> {
+              console.log(result);
+              if(result.errno == -1){
+                alert("User name already exist please choose a new one")
+              }else{
+                global.username = this.state.user_text_name;
+                global.role = this.state.user_mode;
+                global.phoneNum = this.state.user_text_phone;
+                global.change_screen = (this.state.user_mode == mode)?0:1,
+                this.props.navigation.navigate("Setting",
+                {
+                  Name : this.state.user_text_name,
+                  UserMode: this.state.user_mode,
+                  Phone: this.state.user_text_phone,
+                  Change: (this.state.user_mode == mode)?0:1,
+                }
+                )
+              }
+            })
           }); 
-          global.username = this.state.user_text_name;
-          global.role = this.state.user_mode;
-          global.phoneNum = this.state.user_text_phone;
-          global.change_screen = (this.state.user_mode == mode)?0:1,
-
-          this.props.navigation.navigate("Setting",
-          {
-            Name : this.state.user_text_name,
-            UserMode: this.state.user_mode,
-            Phone: this.state.user_text_phone,
-            Change: (this.state.user_mode == mode)?0:1,
-          }
-          )
+         
         }
 
 
@@ -80,10 +89,14 @@ export default class ChangeSetting extends React.Component {
 
            
         <Text style = {styles.text}>Usermode : {this.state.user_mode}</Text>
-        <View style = {styles.container2}>
+        <View style = {Platform.OS === "ios" ? styles.container2 : styles.container3}>
             <Picker
                 selectedValue={this.state.user_mode}
+<<<<<<< HEAD
                 style={{height: 100, width: 200}}
+=======
+                style={{height: Platform.OS === "ios" ? 0 : 150, width: 300}}
+>>>>>>> 22d151e90b1cb5763b174680f609377ed140dedc
                 onValueChange={(itemValue, itemIndex) =>
                 this.setState({user_mode: itemValue})
             }>
@@ -94,7 +107,7 @@ export default class ChangeSetting extends React.Component {
             </View>
 
             {/* <Button  onPress={()=> this.set_update()} title = "back"></Button> */}
-            <View style={styles.touchBtn1}>
+            <View style={Platform.OS === "ios" ? styles.touchBtn1 : styles.touchBtn2}>
             <TouchableOpacity 
                onPress={()=> this.set_update()}
              >
@@ -134,6 +147,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // bottom:-50,
        },
+    container3: { 
+        paddingVertical: 150,
+        height: 10, 
+        width: 100, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        // bottom:-50,
+       },
     text:{
         //flex: 0,
         padding:0,
@@ -141,7 +162,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         color:"black",
-        bottom :-120,
+        bottom :-100,
       },
   touchBtn1:{
         backgroundColor: '#F65353',
@@ -151,7 +172,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 10,
         bottom: -250,
-        }, 
+        },
+  touchBtn2:{
+          backgroundColor: '#F65353',
+          borderRadius: 5,
+          paddingHorizontal: 74,
+          paddingVertical: 10,
+          alignItems: 'center',
+          marginBottom: 10,
+          }, 
     text_opacity:{
           flex: 0,
           padding:10,

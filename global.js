@@ -18,3 +18,4 @@ global.locFrom  = -1;
 global.locTo    = -1;
 global.time     = -1;
 global.change_screen = 0;
+global.userid = -1;
