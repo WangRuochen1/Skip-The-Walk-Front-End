@@ -37,7 +37,6 @@ export default class OrderList extends React.Component {
                       var joined = this.state.myArray.concat(result.data.list[j]);
                       this.setState({ myArray: joined });
                     }
-                    console.log(this.state.myArray);
                   })
               } 
               ).catch((error) => console.log(error));
@@ -90,7 +89,7 @@ export default class OrderList extends React.Component {
               body: JSON.stringify({
                orderid: order_id, 
                }),
-            });
+            })
             Alert.alert("successfully accepted");
             this.forceUpdate();
     }

@@ -2,7 +2,6 @@ import React from "react";
 import {StyleSheet,View,Image,Text,TouchableOpacity,ImageBackground,Button,TextInput,Platform,
   PixelRatio,Picker} from 'react-native'; 
 import "../global";
-import Modal from "react-native-modal";
 import { URL, PORT} from "../src/conf";
 
 import TopBar from "../src/utils/TopBar";
@@ -84,7 +83,7 @@ export default class ChangeSetting extends React.Component {
         <View style = {styles.container2}>
             <Picker
                 selectedValue={this.state.user_mode}
-                style={{height: 0, width: 100}}
+                style={{height: 100, width: 200}}
                 onValueChange={(itemValue, itemIndex) =>
                 this.setState({user_mode: itemValue})
             }>
@@ -129,11 +128,11 @@ const styles = StyleSheet.create({
        },
     container2: { 
         paddingVertical: 30,
-        height: 10, 
-        width: null, 
+        height: 100, 
+        width: 100, 
         justifyContent: 'center',
         alignItems: 'center',
-        bottom:-50,
+        // bottom:-50,
        },
     text:{
         //flex: 0,
