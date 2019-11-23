@@ -128,7 +128,7 @@ export default class PlaceOrderScreen extends React.Component {
             //   25,
             //   50
             // );
-            this.props.navigation.navigate("CustomerScreen");
+            this.props.navigation.navigate("CustomerList"); // here !!!!!
           } else {
             Alert.alert("Failed to Place order", "Please try again");
           }

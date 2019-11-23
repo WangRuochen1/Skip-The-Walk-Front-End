@@ -201,13 +201,14 @@ render() {
         }
       </MapView>
 
-      <TouchableOpacity style={styles.backbtn}
+      {/* <TouchableOpacity style={styles.backbtn}
         onPress={() => { this.props.navigation.navigate("OrderScreen"); }} >
         <Image source={backicon} style={styles.icon} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.placebtn}
         onPress={() => { this.props.navigation.navigate("OrderScreen"); }} >
+           <Text style={styles.text_opacity}>Place Order</Text>
         <Image source={placeOrdericon} style={styles.largeicon} />
       </TouchableOpacity>
 
@@ -246,5 +247,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     left: 30,
-  }
+  },
+  text_opacity:{
+    padding:0,
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "left",
+    color:"#9c9a95",
+  },
 });

@@ -76,9 +76,11 @@ check_login = () => {
                console.log(result.data.usermode);
                 if(result.data.usermode == "courier"){
                     global.role = "courier";
+                    global.userid = result.data.userid;
                     this.props.navigation.navigate("OrderList");
                     }else if(result.data.usermode == "customer"){
                     global.role = "customer";
+                    global.userid = result.data.userid;
                     this.props.navigation.navigate("CustomerScreen");
                     }
              }
@@ -135,7 +137,7 @@ check_login = () => {
 
 
    user_signup = (username, fbtoken,apptoken) => {
-    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+    fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/signup", {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -148,10 +150,15 @@ check_login = () => {
               apptoken: apptoken,
               usermode: global.role,
             }),
-          }).then(() => {
-            global.username = username;
-            console.log("username");
-            console.log(global.username);
+          }).then((response) => {
+              console.log("response",response);
+              response.json().then((result)=>{
+              console.log("user signup function")
+              console.log("result",result);
+              global.userid = result.data.userid;
+              global.username = result.data.username;
+              console.log("username",global.username);
+            })
           });
   }
 
