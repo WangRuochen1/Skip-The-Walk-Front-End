@@ -73,22 +73,19 @@ check_login = () => {
               if(result.errno == -1){
                 alert(`Please Choose Your Role and Sign In with Facebook`);
              }else{
-               console.log(result.data.usermode);
-                if(result.data.usermode == "courier"){
-                    global.role = "courier";
-                    global.userid = result.data.userid;
-                    this.props.navigation.navigate("OrderList");
-                    }else if(result.data.usermode == "customer"){
-                    global.role = "customer";
-                    global.userid = result.data.userid;
-                    this.props.navigation.navigate("CustomerScreen");
-                    }
+              //  console.log(result.data.usermode);
+              //   if(result.data.usermode == "courier"){
+              //       global.role = "courier";
+              //       global.userid = result.data.userid;
+              //       this.props.navigation.navigate("OrderList");
+              //       }else if(result.data.usermode == "customer"){
+              //       global.role = "customer";
+              //       global.userid = result.data.userid;
+              //       this.props.navigation.navigate("CustomerScreen");
+              //       }
              }
              global.username = result.data.username;
              global.phoneNum = result.data.phonenum;
-             console.log("result");
-             console.log(result.data.username);
-             console.log(global.username);
             });
             
           } 
@@ -185,17 +182,17 @@ check_login = () => {
   render() {
     return (
       <View style={{flex: 1, flexDirection: "row", alignSelf: "stretch" }}>
-        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "powderblue", justifyContent:"center", alignItems: "center"}} onPress={() => this.pressLeft()} >
+        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "powderblue", justifyContent:"center", alignItems: "center"}} onPress={() => this.pressRight()} >
             
             <Image source={customer} style= {styles.pic2} />
-            <Text style = {styles.text}> I want to order! </Text>
+            <Text style = {styles.text}> Customer </Text>
             <FadeInView style={styles.myButton2} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "skyblue", justifyContent:"center", alignItems: "center"}} onPress={() => this.pressRight()} > 
+        <TouchableOpacity style={{flex:1, flexDirection: "column", backgroundColor: "skyblue", justifyContent:"center", alignItems: "center"}} onPress={() => this.pressLeft()} > 
             
             <Image source={courier} style={styles.pic} />
-            <Text style = {styles.text}> Let me be the courier! </Text>
+            <Text style = {styles.text}> Courier </Text>
             <FadeInView style={styles.myButton} />
         </TouchableOpacity>
 
