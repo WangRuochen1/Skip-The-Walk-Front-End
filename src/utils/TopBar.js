@@ -11,7 +11,6 @@ export default class TopBar extends Component {
       <View style={{
         alignSelf: 'flex-start',
         justifyContent: 'center',
-        // alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: 'white',
         width: '100%',

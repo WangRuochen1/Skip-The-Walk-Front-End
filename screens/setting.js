@@ -1,5 +1,5 @@
 import React from "react"; 
-import {StyleSheet,View,Image,Text,TouchableOpacity,ImageBackground,Button,TextInput,Platform,
+import {StyleSheet,View,Image,Text,TouchableOpacity,ToastAndroid,ImageBackground,Button,TextInput,Platform,
   PixelRatio,Alert} from 'react-native'; 
 import "../global";
 import Modal from "react-native-modal";
@@ -43,10 +43,24 @@ export default class Setting extends React.Component {
                 "Content-Type": "application/json",
               },
               credentials: "include",
-            }).catch((error) => console.log(error));
-
-            this.props.navigation.navigate("LoginScreen");
-           
+            }).then((response) => {
+              response.json().then((result) => {
+                if (result.errno == 0) {
+                  this.props.navigation.navigate("LoginScreen");
+                  if(Platform.OS === "ios"){
+                    console.log(result.message);
+                  }else{
+                      ToastAndroid.showWithGravityAndOffset(
+                      result.message,
+                      ToastAndroid.LONG,
+                      ToastAndroid.BOTTOM,
+                      25,
+                      50
+                    );
+                  }  
+                }
+              })
+            }).catch((error) => console.log(error));      
     }
 
     render() { 

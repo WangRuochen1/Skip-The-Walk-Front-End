@@ -29,6 +29,9 @@ export default class ChangeSetting extends React.Component {
 
 
         set_update = ()=>{
+          if(this.state.user_text_phone.length !== 10){
+            alert("Please enter valid phone number!");
+          }else{
           fetch(`${URL}:${PORT}/users/update`, {
             method: "POST",
             headers: {
@@ -63,7 +66,7 @@ export default class ChangeSetting extends React.Component {
               }
             })
           }); 
-         
+        }
         }
 
 
