@@ -129,18 +129,18 @@ export default class OrderDetail extends React.Component {
     var status = this.props.navigation.getParam("status", "");
     const id = this.props.navigation.getParam("id", "");
     const detail = this.props.navigation.getParam("detail", "");
-    const time = this.props.navigation.getParam("locFrom", "");
+    const time = this.props.navigation.getParam("time", "");
     const userid = this.props.navigation.getParam("userid", "");
+    const phonenum = this.props.navigation.getParam("phonenum", "");
     return (
       <View style={styles.container}>
-        <CustomLoading 
+        <CustomLoading
         visible={this.state.showloader}
         />
         <TopBar onBackPress={() => this.props.navigation.navigate("OrderList")}>
           Order Detail
         </TopBar>
         <OrderView
-          profilepic={profilepic}
           locFrom={locFrom}
           locTo={locTo}
           status={status}
@@ -148,6 +148,7 @@ export default class OrderDetail extends React.Component {
           id={id}
           detail={detail}
           time={time}
+          phonenum={phonenum}
           rich={true}
         />
         {status == 1 && (

@@ -1,19 +1,26 @@
 import React, { Component } from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, Linking, Platform} from "react-native";
 import StatusView from "./StatusView";
 import despic from "../../assets/destination.png";
 import originpic from "../../assets/origin.png";
 import dotpic from "../../assets/dot.png";
 import righticon from "../../assets/arrow_right.png";
+import phone from "../../assets/phone.png";
 
 export default class OrderView extends Component {
+  dialCall = (number) => {
+    let phoneNumber = '';
+    if (Platform.OS === 'android') { phoneNumber = `tel:${number}`; }
+    else {phoneNumber = `telprompt:${number}`; }
+    Linking.openURL(phoneNumber);
+  }
+
   render = () => {
     return (
       <View
         style={[styles.order, this.props.rich ? styles.rich : styles.simple]}
       >
-        <Image source={this.props.profilepic} style={styles.profilepic} />
         <View style={[styles.locContainer, this.props.richlocContainer ? styles.rich : styles.simplelocContainer]}>
           {this.props.rich && 
             <Text style={{ color: "grey" }}>
@@ -59,7 +66,26 @@ export default class OrderView extends Component {
               ></Image>
             </TouchableOpacity>
           )}
+          {this.props.rich &&(
+            <TouchableOpacity
+            style={{
+            height: 50,
+            width: 50,
+            backgroundColor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 5,
+            marginTop: 180
+            }}
+            onPress={()=>{this.dialCall(parseInt(this.props.phonenum),10)}}>
+              <Image
+                style={{height:50,width:50}}
+                source={phone}
+              />
+          </TouchableOpacity>
+          )}
         </View>
+
       </View>
     );
   };
@@ -72,7 +98,7 @@ const styles = StyleSheet.create({
   order: {
     alignSelf: "center",
     backgroundColor: "white",
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
     borderColor: "grey",

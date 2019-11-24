@@ -121,7 +121,6 @@ export default class LoginScreen extends React.Component {
                 response.json().then((result) => {
                   if(result.errno == -1){
                       if(login_mode == "facebook"){
-                          console.log("enter facebook signup");
                         this.props.navigation.navigate("phonemodeScreen", {
                             username: username,
                             apptoken: apptoken,

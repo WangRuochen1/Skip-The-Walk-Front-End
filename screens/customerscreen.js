@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  StyleSheet, Text, Image, View,
+  StyleSheet, Platform, Image, View,
   TouchableOpacity, TimePickerAndroid, Alert, ToastAndroid
 } from "react-native";
 import MapView, { AnimatedRegion, Marker } from "react-native-maps";
@@ -53,8 +53,9 @@ export default class CustomerScreen extends React.Component {
     */
     // this.socket = SocketIOClient(`${URL}:${WebSocketPORT}`);
     this.socket = io(`${URL}:${WebSocketPORT}`);
-    // this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
+    this.socket.emit("join", JSON.stringify({ orderid: global.id_ls }));
     this.socket.on("courierLocOut", (data) => {
+      console.log(data)
       let loc = JSON.parse(data.location);
       if (loc.orderid != -1 && loc.orderid == global.id_ls) {
         let location = {
@@ -100,7 +101,7 @@ animate(location) {
     latitude: location.latitude,
     longitude: location.longitude
   };
-  coordinate.timing(newCoordinate).start();
+    coordinate.timing(newCoordinate).start();
 }
 
 /* Animation for Map region */
@@ -119,6 +120,7 @@ animateRegion = (location) => {
 componentDidMount() {
   interval = setInterval(() => {
     this.getUserlocHandler();
+    console.log("Order is : ", global.id_ls)
   }, 1000);
 
   if (global.id_ls != -1) {
@@ -139,7 +141,7 @@ componentWillUnmount() {
 
 
 fetchCurOrder = () => {
-  fetch(`${URL}:${PORT}/order/list_user`, {
+  fetch(`${URL}:${PORT}/order/list_customer`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -196,19 +198,18 @@ render() {
             }}
             coordinate={this.state.coordinate}
           >
-            <Image source={courier} style={{ width: 50, height: 50 }} />
+            <Image source={courier} style={{ width: 30, height: 30 }} />
           </Marker.Animated>
         }
       </MapView>
 
-      {/* <TouchableOpacity style={styles.backbtn}
-        onPress={() => { this.props.navigation.navigate("OrderScreen"); }} >
+      <TouchableOpacity style={styles.backbtn}
+        onPress={() => { this.props.navigation.navigate("DashboardScreen"); }} >
         <Image source={backicon} style={styles.icon} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.placebtn}
         onPress={() => { this.props.navigation.navigate("OrderScreen"); }} >
-           <Text style={styles.text_opacity}>Place Order</Text>
         <Image source={placeOrdericon} style={styles.largeicon} />
       </TouchableOpacity>
 
@@ -247,12 +248,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     left: 30,
-  },
-  text_opacity:{
-    padding:0,
-    fontSize: 10,
-    fontWeight: "bold",
-    textAlign: "left",
-    color:"#9c9a95",
-  },
+  }
 });

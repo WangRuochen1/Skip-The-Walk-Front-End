@@ -112,7 +112,7 @@ export default class Setting extends React.Component {
              }
             )
               }>
-            <Text style={styles.text_opacity}>Change Setting</Text>
+            <Text style={styles.text_opacity}>Edit Setting</Text>
             </TouchableOpacity>
       </View>
 
