@@ -8,6 +8,7 @@ import "../global";
 
 import logo from "../assets/logo.png";
 import fbicon from "../assets/facebook.png";
+import { URL, PORT} from "../src/conf";
 
 export default class LoginScreen extends React.Component {
     componentDidMount() {
@@ -15,13 +16,13 @@ export default class LoginScreen extends React.Component {
     }
     state = {
         username: '',
-        passward: '',
+        password: '',
     }
     handelUserName = (text) => {
         this.setState({username: text});
     }
     handlePassword = (text) => {
-        this.setState({passward: text});
+        this.setState({password: text});
     }
    
     //to verify password and navigate to courier/customer screen
@@ -29,7 +30,7 @@ export default class LoginScreen extends React.Component {
         if(username == '' || password == ''){
             alert('Please enter User Name and Password');
         }else{
-        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
+        fetch(`${URL}:${PORT}/users/login`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -39,6 +40,7 @@ export default class LoginScreen extends React.Component {
             body: JSON.stringify({
                 username: username,
                 password: password,
+                fbtoken : -1,
             }),
             }).then((response) => {
                 response.json().then((result) => {
@@ -63,7 +65,7 @@ export default class LoginScreen extends React.Component {
     }
  
     check_login = () => {
-        fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/check", {
+        fetch(`${URL}:${PORT}/users/check`, {
                 method: "GET",
                 headers: {
                   Accept: "application/json",
@@ -73,14 +75,22 @@ export default class LoginScreen extends React.Component {
               }).then((response) => {
                 response.json().then((result) => {
                   if(result.errno == -1){
-                    //alert(`Please Log in or Sign Up`);
+                    alert(`Please Log in or Sign Up`);
                  }else{
+                     console.log(result.message);
+                     console.log("usermode:", result.data.usermode);
                     if(result.data.usermode == "courier"){
+                        global.userid = result.data.userid;
+                        global.role = "courier";
                         this.props.navigation.navigate("OrderList");
                         }else if(result.data.usermode == "customer"){
+                        global.userid = result.data.userid;
+                        global.role = "customer";
                         this.props.navigation.navigate("CustomerScreen");
-                        }
+                        } 
                  }
+                 global.username = result.data.username;
+                 global.phoneNum = result.data.phonenum;
                 });
                 
               } 
@@ -112,12 +122,12 @@ export default class LoginScreen extends React.Component {
           const response = await fetch(
             `https://graph.facebook.com/me?access_token=${token}`);
     
-           let id = (await response.json()).id;
+           let username = (await response.json()).name;
            //this.user_fbsignup(id,token,apptoken);
            this.props.navigation.navigate("phonemodeScreen", {
-               username: id,
+               username: username,
                apptoken: apptoken,
-               fbtoken: token
+               fbtoken: token,
            });
         }
       }catch ({ message }) {
@@ -126,27 +136,6 @@ export default class LoginScreen extends React.Component {
       
        }
     
-    // fbsignupComb = () => {
-    //     this.loginWithFb();
-    //     this.props.navigation.navigate("phonemodeScreen");
-    // }
-    // user_fbsignup = (username, fbtoken,apptoken) => {
-    // fetch("http://ec2-99-79-78-181.ca-central-1.compute.amazonaws.com:3000/users/login", {
-    //         method: "POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json",
-    //         },
-    //         credentials: "include",
-    //         body: JSON.stringify({
-    //             username: username,
-    //             fbtoken: fbtoken,
-    //             apptoken: apptoken,
-    //             usermode: global.role
-    //         }),
-    //         });
-    // }
-
 
 
     render() {
